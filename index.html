@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  // Motion is switched on only when the browser supports it and the visitor hasn't asked for reduced motion.
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('motion');
+  }
+</script>
 <title>Joatham Jacob — Energy, Decarbonization &amp; ESG</title>
 <meta name="description" content="Joatham Jacob (JJ) — energy, decarbonization and ESG engineer in Milan. GHG inventories, CSRD reporting and assurance, industrial energy efficiency, marginal abatement cost modelling, EU ETS and CBAM.">
 <meta property="og:title" content="Joatham Jacob — Energy, Decarbonization & ESG">
@@ -155,7 +161,9 @@
 
   /* ---------- hero ---------- */
   .hero { background: var(--hero); color: var(--hero-ink); border-top: 0 !important; }
-  .hero-bg { position: relative; aspect-ratio: 16 / 9; background: url("hero.jpg") center / cover no-repeat; }
+  .hero-bg { position: relative; aspect-ratio: 16 / 9; overflow: hidden; }
+  .hero-img { position: absolute; inset: 0; background: url("hero.jpg") center / cover no-repeat; transform-origin: 58% 42%; }
+  .hero-fog { position: absolute; inset: 0; pointer-events: none; }
   .hero-bg::after {
     content: ""; position: absolute; inset: 0 0 -1px 0;
     background: linear-gradient(0deg, var(--hero) 0%, var(--hero) 1.5%, color-mix(in srgb, var(--hero) 0%, transparent) 35%),
@@ -179,7 +187,7 @@
   .stat { padding: 1rem 1.1rem; }
   .stat:nth-child(even) { border-left: 1px solid var(--line); }
   .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
-  .stat .v { font-size: 1.6rem; line-height: 1.1; font-variant-numeric: lining-nums; }
+  .stat .v { font-size: 1.6rem; line-height: 1.1; font-variant-numeric: lining-nums tabular-nums; }
   .stat .v small { font-family: var(--font-body); font-size: .8rem; font-weight: 500; color: var(--ink-2); letter-spacing: 0; }
   .stat .l { font-size: .8rem; color: var(--ink-2); margin-top: .3rem; line-height: 1.4; }
 
@@ -233,9 +241,10 @@
   /* ---------- experience & education ---------- */
   .two-col { display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
   .timeline { list-style: none; margin: 0; padding: 0; }
-  .timeline li { position: relative; padding: 0 0 1.5rem 1.6rem; border-left: 1px solid var(--line); }
+  .timeline li { position: relative; padding: 0 0 1.5rem 1.6rem; }
+  .timeline li::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--line); transform-origin: top; }
   .timeline li:last-child { padding-bottom: 0; }
-  .timeline li::before { content: ""; position: absolute; left: -.3rem; top: .45rem; width: .56rem; height: .56rem; border-radius: 50%; background: var(--accent); }
+  .timeline li::before { content: ""; position: absolute; left: -.28rem; top: .45rem; width: .56rem; height: .56rem; border-radius: 50%; background: var(--accent); z-index: 1; }
   .when { font-size: .8rem; color: var(--ink-3); font-weight: 500; }
   .timeline h3 { font-size: 1.05rem; margin: .1rem 0; }
   .org { font-size: .9rem; color: var(--ink-2); margin-bottom: .3rem; }
@@ -310,7 +319,8 @@
     .nav ul.open { display: flex; }
     .nav ul a { display: block; padding: .7rem 0; font-size: 1rem; color: var(--hero-ink); text-shadow: none; border-bottom: 1px solid rgba(255,255,255,.08); }
     .nav ul li:last-child a { border-bottom: 0; }
-    .hero-bg { aspect-ratio: 4 / 5; background-position: 40% center; }
+    .hero-bg { aspect-ratio: 4 / 5; }
+    .hero-img { background-position: 40% center; }
     .hero .frame { padding-top: 0; }
     .stat { padding: .9rem; }
     .stat .v { font-size: 1.3rem; }
@@ -436,6 +446,140 @@
     .contact-foot { margin-top: auto; }
   }
 
+
+  /* =========================================================
+     Motion. Start-states live under html.motion, which is only
+     set when the browser supports it and the visitor has not
+     asked for reduced motion, so nothing is ever hidden otherwise.
+     ========================================================= */
+  :root { --ease-out: cubic-bezier(.2, .7, .2, 1); --ease-spring: cubic-bezier(.3, 1.5, .5, 1); }
+
+  /* hover and focus micro-interactions (always on; tiny) */
+  .btn { transition: background-color .2s, border-color .2s, transform .2s var(--ease-out), box-shadow .2s; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary:hover { box-shadow: 0 6px 20px rgba(52, 211, 153, .35); }
+  .btn-primary svg { transition: transform .25s var(--ease-out); }
+  .btn-primary:hover svg { transform: translateY(2px); }
+  .link-arrow .arr { transition: transform .25s var(--ease-out); }
+  .link-arrow:hover .arr { transform: translateX(3px); }
+  .card, .k-card { transition: transform .35s var(--ease-out), box-shadow .35s, border-color .35s; }
+  .card:hover, .k-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 2px 4px rgba(5,59,45,.06), 0 16px 36px rgba(5,59,45,.12);
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+  }
+  .certs li { transition: padding-left .25s var(--ease-out), color .25s; }
+  .certs li:hover { padding-left: .35rem; }
+
+  /* nav: underline slides under the section you're on */
+  .nav ul a { position: relative; }
+  .nav ul a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -.4rem; height: 2px; border-radius: 1px;
+    background: var(--pop); transform: scaleX(0); transform-origin: left; transition: transform .35s var(--ease-out);
+  }
+  .nav ul a.active::after, .nav ul a:hover::after { transform: scaleX(1); }
+
+  /* scroll cue and screen indicator (16:9 mode only) */
+  .scroll-cue, .pager { display: none; }
+
+  /* landing */
+  @keyframes rise { from { opacity: 0; transform: translateY(1.1rem); } to { opacity: 1; transform: none; } }
+  @keyframes settle { from { scale: 1.14; } to { scale: 1; } }
+  @keyframes fog { from { transform: translate3d(-7%, 0, 0); } to { transform: translate3d(7%, -2%, 0); } }
+  @keyframes navin { from { opacity: 0; transform: translateY(-.6rem); } to { opacity: 1; transform: none; } }
+  @keyframes cue { 0% { top: -45%; } 65%, 100% { top: 100%; } }
+  @keyframes drift { from { transform: scale(1.04) translate3d(-1%, 0, 0); } to { transform: scale(1.1) translate3d(1%, -1%, 0); } }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+  html.motion .hero-img { animation: settle 18s var(--ease-out) both; }
+  html.motion .hero-fog {
+    inset: 24% -30% 14% -30%; opacity: .6; mix-blend-mode: screen; filter: blur(10px);
+    background:
+      radial-gradient(38% 28% at 28% 55%, rgba(255,255,255,.30), transparent 70%),
+      radial-gradient(34% 24% at 66% 42%, rgba(255,255,255,.22), transparent 70%),
+      radial-gradient(30% 20% at 48% 72%, rgba(255,255,255,.18), transparent 70%);
+    animation: fog 40s ease-in-out infinite alternate, fadein 3s ease-out both;
+  }
+  html.motion .hero-text > * { animation: rise .95s var(--ease-out) both; }
+  html.motion .hero-text > :nth-child(1) { animation-delay: .25s; }
+  html.motion .hero-text > :nth-child(2) { animation-delay: .38s; }
+  html.motion .hero-text > :nth-child(3) { animation-delay: .56s; }
+  html.motion .hero-text > :nth-child(4) { animation-delay: .72s; }
+  html.motion .hero-text > :nth-child(5) { animation-delay: .9s; }
+  html.motion header.nav { animation: navin .8s var(--ease-out) .1s both; }
+  html.motion .contact::before { animation: drift 30s ease-in-out infinite alternate; }
+
+  /* scroll-in reveals (JS adds data-reveal only when motion is on) */
+  html.motion [data-reveal] { opacity: 0; transform: translateY(1rem); transition: opacity .75s var(--ease-out), transform .75s var(--ease-out); }
+  html.motion [data-reveal].is-in { opacity: 1; transform: none; }
+
+  /* MACC bars grow out of the zero line, then their labels appear */
+  html.motion .chart-card .bar rect { transform-box: fill-box; transform-origin: 50% 100%; transition: transform 1s var(--ease-out); }
+  html.motion .chart-card .bar.neg rect { transform-origin: 50% 0; }
+  html.motion .chart-card:not(.drawn) .bar rect { transform: scaleY(0); }
+  html.motion .chart-card .bar text { transition: opacity .6s ease-out; }
+  html.motion .chart-card:not(.drawn) .bar text { opacity: 0; }
+  html.motion .chart-card .bar:nth-child(1) rect { transition-delay: .25s; }
+  html.motion .chart-card .bar:nth-child(2) rect { transition-delay: .4s; }
+  html.motion .chart-card .bar:nth-child(3) rect { transition-delay: .55s; }
+  html.motion .chart-card .bar:nth-child(4) rect { transition-delay: .7s; }
+  html.motion .chart-card .bar:nth-child(1) text { transition-delay: .9s; }
+  html.motion .chart-card .bar:nth-child(2) text { transition-delay: 1.05s; }
+  html.motion .chart-card .bar:nth-child(3) text { transition-delay: 1.2s; }
+  html.motion .chart-card .bar:nth-child(4) text { transition-delay: 1.35s; }
+
+  /* experience timeline draws itself, dots pop in */
+  html.motion .timeline li::after { transition: transform .9s var(--ease-out) .1s; }
+  html.motion .timeline li:not(.drawn)::after { transform: scaleY(0); }
+  html.motion .timeline li::before { transition: transform .5s var(--ease-spring); }
+  html.motion .timeline li:not(.drawn)::before { transform: scale(0); }
+
+  /* education photo eases in */
+  html.motion .grad-photo { transition: opacity .9s var(--ease-out), transform .9s var(--ease-out), background-size 1.6s var(--ease-out); }
+  html.motion .grad-photo[data-reveal]:not(.is-in) { background-size: 165% auto; }
+
+  @media (min-width: 1100px) and (orientation: landscape) {
+    .scroll-cue {
+      display: flex; position: absolute; left: 50%; bottom: 1.2rem; z-index: 2; translate: -50% 0;
+      flex-direction: column; align-items: center; gap: .45rem; color: #fff; text-decoration: none;
+      font-family: var(--font-mono); font-size: .6rem; letter-spacing: .16em; text-transform: uppercase;
+      text-shadow: 0 1px 8px rgba(0,0,0,.55); opacity: .9;
+    }
+    .scroll-cue i { position: relative; width: 1px; height: 2.2rem; overflow: hidden; background: rgba(255,255,255,.3); }
+    .scroll-cue i::after { content: ""; position: absolute; left: 0; top: -45%; width: 100%; height: 45%; background: #fff; }
+    html.motion .scroll-cue { animation: fadein 1s ease-out 1.6s both; }
+    html.motion .scroll-cue i::after { animation: cue 2.2s ease-in-out 2s infinite; }
+
+    .pager {
+      display: flex; flex-direction: column; align-items: center; gap: .55rem;
+      position: fixed; right: 1.4rem; top: 50%; translate: 0 -50%; z-index: 9;
+      padding: .65rem .42rem; border-radius: 999px;
+      background: rgba(4, 42, 32, .45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .pager a {
+      position: relative; display: block; width: .42rem; height: .42rem; border-radius: 999px;
+      background: rgba(255,255,255,.5); transition: height .35s var(--ease-out), background-color .25s;
+    }
+    .pager a:hover { background: #fff; }
+    .pager a.active { height: 1.25rem; background: var(--pop); }
+    .pager a::after {
+      content: attr(data-label); position: absolute; right: 1.1rem; top: 50%; translate: .3rem -50%;
+      opacity: 0; pointer-events: none; white-space: nowrap;
+      font-family: var(--font-mono); font-size: .64rem; letter-spacing: .03em;
+      background: var(--hero); color: var(--hero-ink); padding: .22rem .5rem; border-radius: .3rem;
+      transition: opacity .2s, translate .2s var(--ease-out);
+    }
+    .pager a:hover::after, .pager a:focus-visible::after { opacity: 1; translate: 0 -50%; }
+    html.motion .pager { animation: fadein 1s ease-out 1.2s both; }
+  }
+
+  /* belt and braces: honour reduced-motion even if the class slipped through */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+    .hero-fog { display: none; }
+  }
+
   @media print {
     header.nav, .theme-toggle { display: none; }
     .hero, .contact { background: #fff; color: #000; }
@@ -465,7 +609,10 @@
 
   <!-- ================= 1 · LANDING ================= -->
   <section class="slide hero" id="top">
-    <div class="hero-bg" role="img" aria-label="A hiker on a snowy ridge above a sea of fog, looking toward snow-capped mountains"></div>
+    <div class="hero-bg" role="img" aria-label="A hiker on a snowy ridge above a sea of fog, looking toward snow-capped mountains">
+      <div class="hero-img"></div>
+      <div class="hero-fog" aria-hidden="true"></div>
+    </div>
     <div class="hero-scrim"></div>
     <div class="frame">
       <div class="hero-text">
@@ -483,6 +630,7 @@
         </div>
       </div>
     </div>
+    <a class="scroll-cue" href="#work" aria-label="Scroll to the case study"><span>Scroll</span><i></i></a>
   </section>
 
   <!-- ================= 2 · CASE STUDY ================= -->
@@ -494,10 +642,10 @@
           <h2 class="cs-title">Decarbonising an already-green plant: Acciaieria Arvedi, Cremona</h2>
           <p class="cs-summary">Arvedi's Cremona EAF steelworks was the first steelmaker to hold a certified net-zero claim. I set the reported figure aside, rebuilt the physical Scope 1 baseline from EU ETS verified emissions, and costed a 2030 abatement package.</p>
           <div class="stats">
-            <div class="stat"><div class="v num">434,844 <small>tCO<sub>2</sub></small></div><div class="l">Verified Scope 1 baseline, CY2023 (EU ETS)</div></div>
-            <div class="stat"><div class="v num">44.3%</div><div class="l">Abated by the 2030 package: 192,494 tCO<sub>2</sub>/yr</div></div>
-            <div class="stat"><div class="v num">€11.44<small>/t steel</small></div><div class="l">Modelled package cost, about 1.8% of product value</div></div>
-            <div class="stat"><div class="v num">€6.9M <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> €32.6M</div><div class="l">Annual ETS/CBAM liability, 2026 to 2034</div></div>
+            <div class="stat"><div class="v num"><span class="count" data-to="434844">434,844</span> <small>tCO<sub>2</sub></small></div><div class="l">Verified Scope 1 baseline, CY2023 (EU ETS)</div></div>
+            <div class="stat"><div class="v num"><span class="count" data-to="44.3" data-dec="1" data-suf="%">44.3%</span></div><div class="l">Abated by the 2030 package: 192,494 tCO<sub>2</sub>/yr</div></div>
+            <div class="stat"><div class="v num"><span class="count" data-to="11.44" data-dec="2" data-pre="€">€11.44</span><small>/t steel</small></div><div class="l">Modelled package cost, about 1.8% of product value</div></div>
+            <div class="stat"><div class="v num"><span class="count" data-to="6.9" data-dec="1" data-pre="€" data-suf="M">€6.9M</span> <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="count" data-from="6.9" data-to="32.6" data-dec="1" data-pre="€" data-suf="M" data-delay="350">€32.6M</span></div><div class="l">Annual ETS/CBAM liability, 2026 to 2034</div></div>
           </div>
         </div>
 
@@ -534,7 +682,7 @@
               </g>
               <text x="302" y="293" font-size="12.5" fill="var(--ink-3)" text-anchor="middle" class="axis-title">Cumulative abatement, ktCO<tspan baseline-shift="sub" font-size="75%">2</tspan>/yr</text>
               <g class="bars">
-                <g class="bar">
+                <g class="bar neg">
                   <title>Waste-heat recovery (EAF off-gas): 9,000 tCO₂/yr at −€44/tCO₂ · capex €18.0M</title>
                   <rect x="56" y="206" width="21" height="19.4" rx="3" fill="var(--bar-neg)"/>
                   <text x="57" y="242" font-size="12.5" fill="var(--ink-2)" class="lbl">Waste heat</text>
@@ -917,6 +1065,101 @@
     var nav = document.querySelector('header.nav');
     function update() { nav.classList.toggle('solid', window.scrollY > 24); }
     update(); window.addEventListener('scroll', update, { passive: true });
+  })();
+
+  // ---------- Motion ----------
+  (function () {
+    var root = document.documentElement;
+    var motion = root.classList.contains('motion');
+    var slideMode = window.matchMedia('(min-width: 1100px) and (orientation: landscape)');
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+
+    // Screen indicator (the dots on the right) — built from the sections themselves.
+    var labels = { top: 'Home', work: 'Case study', 'more-work': 'More work', knowledge: 'Knowledge', esg: 'ESG', experience: 'Experience', skills: 'Credentials', contact: 'Contact' };
+    var pager = document.createElement('nav');
+    pager.className = 'pager'; pager.setAttribute('aria-label', 'Screens');
+    slides.forEach(function (s) {
+      var a = document.createElement('a');
+      a.href = '#' + s.id; a.setAttribute('data-label', labels[s.id] || s.id); a.setAttribute('aria-label', labels[s.id] || s.id);
+      pager.appendChild(a);
+    });
+    document.body.appendChild(pager);
+
+    // Highlight the current screen in the nav and the indicator.
+    var navFor = { work: '#work', 'more-work': '#work', knowledge: '#knowledge', esg: '#esg', experience: '#experience', skills: '#skills', contact: '#contact' };
+    var navLinks = document.querySelectorAll('header.nav ul a');
+    var pagerLinks = pager.querySelectorAll('a');
+    function setActive(id) {
+      navLinks.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === navFor[id]); });
+      pagerLinks.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + id); });
+    }
+    if ('IntersectionObserver' in window) {
+      var current = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) setActive(e.target.id); });
+      }, { rootMargin: '-50% 0px -50% 0px' });
+      slides.forEach(function (s) { current.observe(s); });
+    }
+    setActive('top');
+
+    if (!motion) return;
+
+    // Count-up numbers (the final value is already in the HTML, so no-JS and reduced-motion visitors see it).
+    function countUp(el) {
+      var to = parseFloat(el.getAttribute('data-to')), from = parseFloat(el.getAttribute('data-from') || '0');
+      var dec = parseInt(el.getAttribute('data-dec') || '0', 10), pre = el.getAttribute('data-pre') || '', suf = el.getAttribute('data-suf') || '';
+      var delay = parseInt(el.getAttribute('data-delay') || '0', 10), dur = 1500;
+      function fmt(v) { return pre + v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + suf; }
+      el.textContent = fmt(from);
+      setTimeout(function () {
+        var t0 = null;
+        function step(t) {
+          if (t0 === null) t0 = t;
+          var p = Math.min(1, (t - t0) / dur), eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = fmt(from + (to - from) * eased);
+          if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(to);
+        }
+        requestAnimationFrame(step);
+      }, delay + 200);
+    }
+
+    // Scroll-in reveals: each screen's content rises in, staggered in reading order.
+    var targets = document.querySelectorAll([
+      '.slide:not(.hero) .sec-head > *', '.cs-left > *', '.chart-card', '.findings li', '.cs-foot',
+      '.card', '.field-head', '.field > div', '.k-card', '.timeline li', '.two-col > div > .eyebrow',
+      '.grad-photo', '.edu-item', '.skills > div', '.certs li', '.contact-body > *', '.contact-foot'
+    ].join(','));
+    targets.forEach(function (el) { el.setAttribute('data-reveal', ''); });
+
+    var io = new IntersectionObserver(function (entries) {
+      var batch = entries.filter(function (e) { return e.isIntersecting; }).map(function (e) { return e.target; });
+      batch.sort(function (a, b) { return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1; });
+      batch.forEach(function (el, k) {
+        io.unobserve(el);
+        var delay = Math.min(k * 80, 720);
+        setTimeout(function () {
+          el.classList.add('is-in', 'drawn');
+          el.querySelectorAll('.count').forEach(countUp);
+          // Once settled, drop the reveal hooks so hover effects respond instantly.
+          setTimeout(function () { el.removeAttribute('data-reveal'); el.classList.remove('is-in'); }, 900);
+        }, delay);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+    targets.forEach(function (el) { io.observe(el); });
+
+    // Gentle parallax on the landing photo, 16:9 mode only.
+    var img = document.querySelector('.hero-img'), text = document.querySelector('.hero-text'), hero = document.querySelector('.hero');
+    var ticking = false;
+    function parallax() {
+      ticking = false;
+      if (!slideMode.matches) { img.style.translate = ''; text.style.opacity = ''; text.style.translate = ''; return; }
+      var y = window.scrollY, h = hero.offsetHeight;
+      if (y > h) return;
+      img.style.translate = '0 ' + (y * 0.3).toFixed(1) + 'px';
+      text.style.translate = '0 ' + (y * -0.12).toFixed(1) + 'px';
+      text.style.opacity = Math.max(0, 1 - y / (h * 0.75)).toFixed(3);
+    }
+    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(parallax); } }, { passive: true });
+    parallax();
   })();
 
   // Light / dark toggle (remembers the choice when storage is available).

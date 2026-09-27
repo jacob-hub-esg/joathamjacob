@@ -222,6 +222,8 @@
 
   /* ---------- project cards & field work ---------- */
   .grid3 { display: grid; grid-template-columns: 1fr; gap: 1.1rem; }
+  .grid3.tools .stack { margin-top: auto; }
+  .field-card .k-list { margin: 0; }
   .card { background: var(--surface); border: 1px solid var(--line); border-radius: .75rem; padding: 1.4rem; display: flex; flex-direction: column; box-shadow: var(--shadow); }
   .kicker { font-size: .72rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); margin-bottom: .55rem; display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
   .status { font-size: .66rem; letter-spacing: .04em; color: var(--accent-ink); background: var(--accent-soft); border-radius: 999px; padding: .1rem .5rem; }
@@ -403,6 +405,18 @@
     .edu-item .coursework { padding: .45rem .7rem; margin-top: .35rem; }
     .edu-item p { font-size: .82rem; }
     .edu-item .coursework { font-size: .76rem; line-height: 1.5; }
+
+    /* more work: six compact cards, three per row */
+    #more-work .sec-head { margin-bottom: 1.2rem; }
+    .grid3.tools { gap: 1.1rem 1.4rem; flex: 1; min-height: 0; }
+    .grid3.tools .card { padding: .95rem 1.1rem .85rem; }
+    .grid3.tools .card h3 { font-size: .98rem; line-height: 1.25; margin-bottom: .4rem; }
+    .grid3.tools .card p { font-size: .74rem; line-height: 1.5; margin-bottom: .6rem; }
+    .grid3.tools .kicker { margin-bottom: .45rem; font-size: .66rem; }
+    .grid3.tools .stack { margin-top: auto; }
+    .grid3.tools .stack span { font-size: .62rem; }
+    .field-card .k-list { gap: .35rem; margin: 0; }
+    .field-card .k-list li { font-size: .72rem; line-height: 1.45; }
 
     /* knowledge: four areas side by side */
     #knowledge .sec-head { margin-bottom: 1.2rem; }
@@ -768,44 +782,48 @@
     <div class="frame">
       <div class="sec-head">
         <p class="eyebrow">More work</p>
-        <h2>Models, tools and field work</h2>
+        <h2>Tools I've built, and field work</h2>
       </div>
-      <div class="grid3">
-        <article class="card" data-project="eaf-macc">
-          <div class="kicker">MACC · 2026</div>
-          <h3>Abatement cost analysis for a mid-market EAF steel plant</h3>
-          <p>I modelled eight interventions for a 500,000 t/yr plant against a 150,000 tCO<sub>2</sub>e baseline at an 8% discount rate. Sensitivity on EU allowance prices shows the carbon price at which each capital-intensive measure turns viable.</p>
-          <div class="metric"><b class="num">~6,000 tCO<sub>2</sub>e/yr</b> of negative-cost abatement found, for €2.7M capex</div>
-          <div class="stack"><span>Excel</span><span>NPV</span><span>Sensitivity</span></div>
+      <div class="grid3 tools">
+        <article class="card" data-project="macc-app">
+          <div class="kicker">Decarbonization · 2026</div>
+          <h3>MACC and project finance tool</h3>
+          <p>Builds a marginal abatement cost curve with measures ordered cheapest first and bar width set by annual abatement. For each measure it calculates payback, NPV at two discount rates, IRR, LCOE and levelised cost of abatement, and updates live as the EU ETS price or measures change.</p>
+          <div class="stack"><span>React</span><span>Vite</span><span>SVG charts</span></div>
         </article>
-        <article class="card" data-project="abatement-app">
-          <div class="kicker">Tool · 2026</div>
-          <h3>Interactive abatement cost &amp; energy finance app</h3>
-          <p>A React application that calculates payback, NPV, IRR, LCOE and levelised cost of abatement from user inputs, with a custom waterfall chart and a carbon-price reference line. Built end to end with LLM-assisted development and deployed with GitHub Actions.</p>
-          <div class="stack" style="margin-top:auto"><span>React</span><span>Vite</span><span>GitHub Actions</span></div>
+        <article class="card" data-project="building-tool">
+          <div class="kicker">Buildings · 2026</div>
+          <h3>Building emissions benchmark &amp; decarbonisation tool</h3>
+          <p>Scope 1 and 2 emissions for buildings in 20 European countries and six building types, using country-specific IEA grid factors. It benchmarks carbon intensity against EU peers, checks CSRD readiness and projects a pathway to net zero by 2050.</p>
+          <div class="stack"><span>GHG Protocol</span><span>ESRS E1</span><span>React</span></div>
+        </article>
+        <article class="card" data-project="csrd-readiness">
+          <div class="kicker">ESG reporting · 2026</div>
+          <h3>CSRD readiness assessment</h3>
+          <p>About 40 weighted questions across all ten ESRS topics. It scores readiness from 0 to 100 for each section and overall, flags the priority gaps with recommended actions, and shows the CSRD reporting timeline for each company category.</p>
+          <div class="stack"><span>ESRS</span><span>JavaScript</span></div>
+        </article>
+        <article class="card" data-project="co2-calculator">
+          <div class="kicker">Buildings · 2026</div>
+          <h3>CO<sub>2</sub> benchmark calculator</h3>
+          <p>Operational carbon for commercial buildings from type, floor area, energy source, age and occupancy. It returns tonnes of CO<sub>2</sub>e, kg CO<sub>2</sub>e/m² and energy use intensity by scope, rated against EU Taxonomy, EPBD and BREEAM thresholds.</p>
+          <div class="stack"><span>GHG Protocol</span><span>EU Taxonomy</span><span>React</span></div>
         </article>
         <article class="card" data-project="monitoring">
-          <div class="kicker">Monitoring <span class="status">In progress</span></div>
+          <div class="kicker">Energy monitoring <span class="status">In progress</span></div>
           <h3>Energy performance monitoring pipeline</h3>
           <p>A Python pipeline that takes hourly meter data and builds a weather-normalised baseline by degree-day regression. It flags deviations from expected consumption and reports them in Power BI, in the form of ISO 50001 energy performance monitoring.</p>
-          <div class="stack" style="margin-top:auto"><span>Python · pandas</span><span>Regression</span><span>Power BI</span></div>
+          <div class="stack"><span>Python · pandas</span><span>Regression</span><span>Power BI</span></div>
         </article>
-      </div>
-
-      <h3 class="field-head">Field work</h3>
-      <div class="field">
-        <div data-project="railway-audits">
-          <h3>Energy audits: 8 railway stations, Bihar (India)</h3>
-          <p>A 25-day multi-site campaign: site surveys, load analysis, energy and water consumption measurement, and a report for each site with prioritised interventions.</p>
-        </div>
-        <div data-project="biogas">
-          <h3>Biogas plant evaluation, Palakkad (India)</h3>
-          <p>An on-site assessment of an operating plant against its design specification, with root-cause analysis of the underperformance and lab testing of feedstock variants.</p>
-        </div>
-        <div data-project="solar">
-          <h3>Solar &amp; waste-to-resource engineering</h3>
-          <p>Solar PV sizing and cost estimation in PVsyst. For my B.Tech thesis I designed and built a solar-powered trash compactor, published by TNAU in 2020.</p>
-        </div>
+        <article class="card field-card" data-project="field-work">
+          <div class="kicker">Field work · India</div>
+          <h3>On-site audits and assessments</h3>
+          <ul class="k-list">
+            <li><b>8 railway stations, Bihar:</b> a 25-day energy, water and load-survey campaign, with a report and prioritised interventions for each site</li>
+            <li><b>Biogas plant, Palakkad:</b> performance against design, root-cause analysis and feedstock lab tests</li>
+            <li><b>Solar and waste-to-resource:</b> PVsyst sizing and costing; a solar-powered trash compactor (B.Tech thesis, published 2020)</li>
+          </ul>
+        </article>
       </div>
     </div>
   </section>
@@ -843,7 +861,7 @@
             <li>EU ETS allowances and the free-allocation phase-out</li>
             <li><b>Italian incentives:</b> iperammortamento (after Transizione 5.0), Conto Termico, white certificates</li>
           </ul>
-          <p class="k-shown"><span class="k-label">Applied in</span><a href="#work">Arvedi MACC</a><span class="sep">·</span><a href="#more-work">EAF plant MACC</a><span class="sep">·</span><a href="#more-work">Abatement cost app</a></p>
+          <p class="k-shown"><span class="k-label">Applied in</span><a href="#work">Arvedi MACC</a><span class="sep">·</span><a href="https://jacob-hub-esg.github.io/macc-finance-tool/" target="_blank" rel="noopener">MACC &amp; finance tool</a></p>
         </article>
         <article class="k-card">
           <p class="k-num">03</p>
@@ -865,9 +883,9 @@
             <li><b>Python (pandas):</b> hourly meter data, cleaning, degree-day regression baselines, anomaly flags</li>
             <li><b>Power BI:</b> energy performance dashboards</li>
             <li><b>PVsyst:</b> PV sizing and cost estimation</li>
-            <li><b>React:</b> interactive techno-economic tools</li>
+            <li><b>React and JavaScript:</b> interactive carbon, benchmarking and finance tools</li>
           </ul>
-          <p class="k-shown"><span class="k-label">Applied in</span><a href="#more-work">Monitoring pipeline</a><span class="sep">·</span><a href="#more-work">Abatement cost app</a><span class="sep">·</span><a href="#work">Arvedi Excel model</a></p>
+          <p class="k-shown"><span class="k-label">Applied in</span><a href="https://jacob-hub-esg.github.io/macc-finance-tool/" target="_blank" rel="noopener">MACC &amp; finance tool</a><span class="sep">·</span><a href="https://jacob-hub-esg.github.io/esgbenchmark/" target="_blank" rel="noopener">Building emissions tool</a><span class="sep">·</span><a href="#more-work">Monitoring pipeline</a></p>
         </article>
       </div>
     </div>
@@ -898,7 +916,7 @@
             <li>GRI, SASB, TCFD, IR, BRSR</li>
             <li>CDP-style questionnaires, EU Taxonomy</li>
           </ul>
-          <p class="k-shown"><span class="k-label">Evidence</span>CSRD readiness assessment across all ten ESRS<span class="sep">·</span>Disclosure benchmarking for international clients at Earth Academy Global</p>
+          <p class="k-shown"><span class="k-label">Evidence</span><a href="https://jacob-hub-esg.github.io/csrd-framework/" target="_blank" rel="noopener">CSRD readiness assessment across all ten ESRS</a><span class="sep">·</span>Disclosure benchmarking for international clients at Earth Academy Global</p>
         </article>
         <article class="k-card">
           <h3>Assurance &amp; data quality</h3>
@@ -934,7 +952,7 @@
             <li>Scope 1–2 tools for building portfolios</li>
             <li>Benchmarking against EU Taxonomy, EPBD and BREEAM</li>
           </ul>
-          <p class="k-shown"><span class="k-label">Evidence</span>Supplier screening at Industrious Global Technologies<span class="sep">·</span>Portfolio benchmarking tools (2026)</p>
+          <p class="k-shown"><span class="k-label">Evidence</span>Supplier screening at Industrious Global Technologies<span class="sep">·</span><a href="https://jacob-hub-esg.github.io/esgbenchmark/" target="_blank" rel="noopener">Building emissions tool</a><span class="sep">·</span><a href="https://jacob-hub-esg.github.io/my-calculator/" target="_blank" rel="noopener">CO<sub>2</sub> benchmark calculator</a></p>
         </article>
       </div>
     </div>
@@ -1055,12 +1073,12 @@
      shown at the bottom of the card.
      ===================================================================== */
   var PROJECT_LINKS = {
-    'eaf-macc':       { url: '', label: 'Open model' },     // Abatement cost analysis, mid-market EAF plant
-    'abatement-app':  { url: '', label: 'Open app' },       // Interactive abatement cost & energy finance app
-    'monitoring':     { url: '', label: 'Dashboard' }, // Energy performance monitoring pipeline
-    'railway-audits': { url: '', label: 'Open report' },    // Field work: railway station audits
-    'biogas':         { url: '', label: 'Open report' },    // Field work: biogas plant evaluation
-    'solar':          { url: '', label: 'Open project' }     // Field work: solar & waste-to-resource
+    'macc-app':       { url: 'https://jacob-hub-esg.github.io/macc-finance-tool/', label: 'Open app' },  // MACC and project finance tool
+    'building-tool':  { url: 'https://jacob-hub-esg.github.io/esgbenchmark/', label: 'Open app' },  // Building emissions benchmark & decarbonisation tool
+    'csrd-readiness': { url: 'https://jacob-hub-esg.github.io/csrd-framework/', label: 'Open app' },  // CSRD readiness assessment
+    'co2-calculator': { url: 'https://jacob-hub-esg.github.io/my-calculator/', label: 'Open app' },  // CO2 benchmark calculator
+    'monitoring':     { url: '', label: 'Dashboard' },    // Energy performance monitoring pipeline (add a link when it's live)
+    'field-work':     { url: '', label: 'Open report' }   // Field work (add a link to a report or photos if you have one)
   };
 
   // Turn every project that has an address into a clickable card.

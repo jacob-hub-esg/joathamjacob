@@ -8,6 +8,13 @@
   if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.classList.add('motion');
   }
+  // Pages: show one section at a time. The address after # decides which (e.g. #esg); none = landing page.
+  (function () {
+    var d = document.documentElement, pages = ['top', 'work', 'more-work', 'knowledge', 'esg', 'experience', 'skills', 'contact'];
+    var h = (location.hash || '').slice(1);
+    d.classList.add('router');
+    d.setAttribute('data-page', pages.indexOf(h) > -1 ? h : 'top');
+  })();
 </script>
 <title>Joatham Jacob — Energy, Decarbonization &amp; ESG</title>
 <meta name="description" content="Joatham Jacob (JJ) — energy, decarbonization and ESG engineer in Milan. GHG inventories, CSRD reporting and assurance, industrial energy efficiency, marginal abatement cost modelling, EU ETS and CBAM.">
@@ -609,8 +616,48 @@
     .hero-fog { display: none; }
   }
 
+
+  /* =========================================================
+     Pages: with JS, one section is shown at a time (html.router).
+     Without JS the site falls back to one long scrolling page.
+     ========================================================= */
+  html.router { scroll-snap-type: none !important; }
+  html.router .slide { display: none; border-top: 0; }
+  html.router[data-page="top"] #top, html.router[data-page="work"] #work, html.router[data-page="more-work"] #more-work,
+  html.router[data-page="knowledge"] #knowledge, html.router[data-page="esg"] #esg, html.router[data-page="experience"] #experience,
+  html.router[data-page="skills"] #skills, html.router[data-page="contact"] #contact { display: block; }
+  [tabindex="-1"]:focus { outline: none; }
+  @keyframes pagein { from { opacity: 0; transform: translateY(.9rem); } to { opacity: 1; transform: none; } }
+  html.motion .slide.entering > .frame { animation: pagein .55s var(--ease-out) both; }
+  html.motion .slide.entering.hero .hero-bg, html.motion .slide.entering.contact { animation: fadein .5s ease-out both; }
+
+  /* "Next page" link at the bottom of each page (phones and tablets) */
+  .next-link { display: inline-flex; align-items: center; gap: .4rem; margin-top: 2.4rem; font-weight: 600; text-decoration: none; }
+  .next-link:hover .arr { transform: translateX(3px); }
+  .next-link .arr { transition: transform .25s var(--ease-out); }
+
+  /* page dots: previous / next arrows */
+  .pager .pg-step {
+    display: grid; place-items: center; width: 1.1rem; height: 1.1rem; padding: 0; border: 0; background: none;
+    color: rgba(255,255,255,.8); cursor: pointer; border-radius: 50%; transition: color .2s, background-color .2s;
+  }
+  .pager .pg-step:hover:not(:disabled) { color: #fff; background: rgba(255,255,255,.12); }
+  .pager .pg-step:disabled { opacity: .3; cursor: default; }
+  .pager .pg-step svg { width: .75rem; height: .75rem; }
+
+  @media (min-width: 1100px) and (orientation: landscape) {
+    /* each page fills the window; its 16:9 frame sits in the middle */
+    html.router .slide { height: auto; min-height: 100vh; min-height: 100dvh; }
+    html.router[data-page="top"] #top, html.router[data-page="work"] #work, html.router[data-page="more-work"] #more-work,
+    html.router[data-page="knowledge"] #knowledge, html.router[data-page="esg"] #esg, html.router[data-page="experience"] #experience,
+    html.router[data-page="skills"] #skills, html.router[data-page="contact"] #contact { display: flex; flex-direction: column; justify-content: center; }
+    html.router .slide > .frame { height: 45rem; flex: none; }
+    .next-link { display: none; }
+  }
+
   @media print {
-    header.nav, .theme-toggle { display: none; }
+    header.nav, .theme-toggle, .pager, .next-link { display: none !important; }
+    html.router .slide { display: block !important; }
     .hero, .contact { background: #fff; color: #000; }
   }
 </style>
@@ -623,7 +670,8 @@
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu">Menu</button>
     <nav aria-label="Sections">
       <ul id="site-menu">
-        <li><a href="#work">Work</a></li>
+        <li><a href="#work">Case study</a></li>
+        <li><a href="#more-work">Tools</a></li>
         <li><a href="#knowledge">Knowledge</a></li>
         <li><a href="#esg">ESG</a></li>
         <li><a href="#experience">Experience</a></li>
@@ -659,7 +707,6 @@
         </div>
       </div>
     </div>
-    <a class="scroll-cue" href="#work" aria-label="Scroll to the case study"><span>Scroll</span><i></i></a>
   </section>
 
   <!-- ================= 2 · CASE STUDY ================= -->
@@ -1145,8 +1192,14 @@
   // Nav turns solid once the page scrolls past the top of the photo.
   (function () {
     var nav = document.querySelector('header.nav');
-    function update() { nav.classList.toggle('solid', window.scrollY > 24); }
-    update(); window.addEventListener('scroll', update, { passive: true });
+    var root = document.documentElement;
+    function update() {
+      var onLanding = !root.classList.contains('router') || root.getAttribute('data-page') === 'top';
+      nav.classList.toggle('solid', window.scrollY > 24 || !onLanding);
+    }
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('hashchange', function () { setTimeout(update, 0); });
   })();
 
   // ---------- Motion ----------
@@ -1157,18 +1210,26 @@
     var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
 
     // Screen indicator (the dots on the right) — built from the sections themselves.
-    var labels = { top: 'Home', work: 'Case study', 'more-work': 'More work', knowledge: 'Knowledge', esg: 'ESG', experience: 'Experience', skills: 'Credentials', contact: 'Contact' };
+    var labels = { top: 'Home', work: 'Case study', 'more-work': 'Tools', knowledge: 'Knowledge', esg: 'ESG', experience: 'Experience', skills: 'Credentials', contact: 'Contact' };
+    var ids = slides.map(function (s) { return s.id; });
+    var chevron = function (d) { return '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="' + d + '" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'; };
     var pager = document.createElement('nav');
-    pager.className = 'pager'; pager.setAttribute('aria-label', 'Screens');
+    pager.className = 'pager'; pager.setAttribute('aria-label', 'Pages');
+    var prevBtn = document.createElement('button');
+    prevBtn.type = 'button'; prevBtn.className = 'pg-step'; prevBtn.setAttribute('aria-label', 'Previous page'); prevBtn.innerHTML = chevron('M4 10l4-4 4 4');
+    pager.appendChild(prevBtn);
     slides.forEach(function (s) {
       var a = document.createElement('a');
       a.href = '#' + s.id; a.setAttribute('data-label', labels[s.id] || s.id); a.setAttribute('aria-label', labels[s.id] || s.id);
       pager.appendChild(a);
     });
+    var nextBtn = document.createElement('button');
+    nextBtn.type = 'button'; nextBtn.className = 'pg-step'; nextBtn.setAttribute('aria-label', 'Next page'); nextBtn.innerHTML = chevron('M4 6l4 4 4-4');
+    pager.appendChild(nextBtn);
     document.body.appendChild(pager);
 
     // Highlight the current screen in the nav and the indicator.
-    var navFor = { work: '#work', 'more-work': '#work', knowledge: '#knowledge', esg: '#esg', experience: '#experience', skills: '#skills', contact: '#contact' };
+    var navFor = { work: '#work', 'more-work': '#more-work', knowledge: '#knowledge', esg: '#esg', experience: '#experience', skills: '#skills', contact: '#contact' };
     var navLinks = document.querySelectorAll('header.nav ul a');
     var pagerLinks = pager.querySelectorAll('a');
     function setActive(id) {
@@ -1176,12 +1237,63 @@
       pagerLinks.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + id); });
     }
     if ('IntersectionObserver' in window) {
-      var current = new IntersectionObserver(function (entries) {
+      var activeObserver = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) { if (e.isIntersecting) setActive(e.target.id); });
       }, { rootMargin: '-50% 0px -50% 0px' });
-      slides.forEach(function (s) { current.observe(s); });
+      slides.forEach(function (s) { activeObserver.observe(s); });
     }
     setActive('top');
+
+    // ---------- Pages ----------
+    if (root.classList.contains('router')) {
+      var baseTitle = document.title;
+      var current = root.getAttribute('data-page') || 'top';
+      function go(id) { location.hash = id === 'top' ? '#top' : '#' + id; }
+      function show(id, animate) {
+        if (ids.indexOf(id) < 0) id = 'top';
+        var changed = id !== current;
+        current = id;
+        root.setAttribute('data-page', id);
+        var page = document.getElementById(id);
+        if (changed && animate && motion) {
+          page.classList.remove('entering'); void page.offsetWidth; page.classList.add('entering');
+          setTimeout(function () { page.classList.remove('entering'); }, 700);
+        }
+        window.scrollTo(0, 0);
+        document.title = id === 'top' ? baseTitle : labels[id] + ' — Joatham Jacob';
+        setActive(id);
+        var i = ids.indexOf(id);
+        prevBtn.disabled = i === 0; nextBtn.disabled = i === ids.length - 1;
+        if (changed && animate) {
+          var heading = page.querySelector('h1, h2');
+          if (heading) { heading.setAttribute('tabindex', '-1'); heading.focus({ preventScroll: true }); }
+        }
+      }
+      window.addEventListener('hashchange', function () { show(location.hash.slice(1), true); });
+      prevBtn.addEventListener('click', function () { var i = ids.indexOf(current); if (i > 0) go(ids[i - 1]); });
+      nextBtn.addEventListener('click', function () { var i = ids.indexOf(current); if (i < ids.length - 1) go(ids[i + 1]); });
+
+      // Keyboard: arrow keys / Page Up / Page Down move between pages on laptops and desktops.
+      document.addEventListener('keydown', function (e) {
+        if (!slideMode.matches || e.altKey || e.ctrlKey || e.metaKey) return;
+        var tag = (e.target.tagName || '').toLowerCase();
+        if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
+        var i = ids.indexOf(current);
+        if (['ArrowRight', 'ArrowDown', 'PageDown'].indexOf(e.key) > -1 && i < ids.length - 1) { e.preventDefault(); go(ids[i + 1]); }
+        if (['ArrowLeft', 'ArrowUp', 'PageUp'].indexOf(e.key) > -1 && i > 0) { e.preventDefault(); go(ids[i - 1]); }
+      });
+
+      // Phones and tablets: a "Next: …" link at the end of each page.
+      slides.forEach(function (s, i) {
+        if (i === 0 || i === slides.length - 1) return;
+        var a = document.createElement('a');
+        a.className = 'next-link'; a.href = '#' + ids[i + 1];
+        a.innerHTML = 'Next: ' + labels[ids[i + 1]] + ' <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        s.querySelector('.frame').appendChild(a);
+      });
+
+      show(current, false);
+    }
 
     if (!motion) return;
 

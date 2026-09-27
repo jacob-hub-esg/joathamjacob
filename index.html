@@ -296,6 +296,16 @@
   .certs li { padding: .6rem 0; border-bottom: 1px solid var(--line); font-size: .92rem; display: flex; justify-content: space-between; gap: 1rem; }
   .certs li span { color: var(--ink-3); white-space: nowrap; font-size: .85rem; }
 
+  /* ---------- badges ---------- */
+  .badges-wrap { margin-top: 2.4rem; }
+  .badges { list-style: none; margin: .4rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(6.4rem, 1fr)); gap: 1.1rem .9rem; }
+  .badges li { display: flex; flex-direction: column; align-items: center; gap: .35rem; text-align: center; }
+  .badges img { width: 100%; max-width: 7rem; height: auto; filter: drop-shadow(0 3px 8px rgba(5,59,45,.12)); transition: transform .3s var(--ease-out); }
+  .badges li:hover img { transform: translateY(-3px) scale(1.04); }
+  .badges span { font-family: var(--font-mono); font-size: .68rem; color: var(--ink-3); line-height: 1.3; }
+  :root[data-theme="dark"] .badges img { filter: brightness(.92) drop-shadow(0 3px 8px rgba(0,0,0,.35)); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .badges img { filter: brightness(.92) drop-shadow(0 3px 8px rgba(0,0,0,.35)); } }
+
   /* ---------- contact ---------- */
   .contact { background: var(--hero); color: var(--hero-ink); border-top: 0 !important; overflow: hidden; }
   .contact::before {
@@ -446,8 +456,15 @@
     .k-grid.six .k-list li { font-size: .78rem; }
     .k-grid.six .k-shown { font-size: .72rem; line-height: 1.45; color: var(--ink-2); padding-top: .5rem; }
 
-    /* skills: fewer lines, so centre them in the slide and give them room */
+    /* credentials: toolkit + certificates on top, badge strip below */
     #skills .frame { justify-content: center; padding-top: 4.6rem; }
+    #skills .sec-head { margin-bottom: 1.1rem; }
+    #skills .skills { row-gap: 1.1rem !important; }
+    #skills .certs li { padding: .62rem 0 !important; }
+    .badges-wrap { margin-top: 1.7rem; }
+    .badges { grid-template-columns: repeat(7, 1fr); gap: 1.4rem; }
+    .badges img { max-width: 6.3rem; }
+    .badges span { font-size: .62rem; }
     .skills-wrap { grid-template-columns: 1.3fr 1fr; }
     .skills { row-gap: 1.9rem; }
     #skills .skills { grid-template-columns: 1fr; row-gap: 1.6rem; }
@@ -655,8 +672,65 @@
     .next-link { display: none; }
   }
 
+  /* =========================================================
+     Floating dock: the site's navigation.
+     ========================================================= */
+  header.nav, header.nav.solid { position: absolute; background: transparent !important; border: 0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  html.router:not([data-page="top"]):not([data-page="contact"]) .brand { color: var(--ink); text-shadow: none; }
+  .pager { display: none !important; }
+
+  .dock {
+    position: fixed; left: 50%; bottom: .9rem; translate: -50% 0; z-index: 20;
+    display: flex; align-items: flex-end; gap: .35rem; padding: .42rem .45rem;
+    border-radius: 1.15rem; background: rgba(6, 28, 21, .64); border: 1px solid rgba(255,255,255,.14);
+    backdrop-filter: blur(14px) saturate(150%); -webkit-backdrop-filter: blur(14px) saturate(150%);
+    box-shadow: 0 .8rem 2.4rem rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  .dock a {
+    --s: 1; position: relative; display: grid; place-items: center; flex: none;
+    width: calc(2.55rem * var(--s)); height: calc(2.55rem * var(--s)); border-radius: .8rem;
+    color: #e9f5ef; background: rgba(255,255,255,.07); text-decoration: none;
+    transition: width .16s var(--ease-out), height .16s var(--ease-out), background-color .2s, color .2s;
+  }
+  .dock a svg { width: 46%; height: 46%; }
+  .dock a:hover { background: rgba(52, 211, 153, .22); }
+  .dock a.active { background: var(--pop); color: var(--pop-ink); }
+  .dock a.active::after { content: ""; position: absolute; bottom: -.32rem; left: 50%; width: .24rem; height: .24rem; margin-left: -.12rem; border-radius: 50%; background: var(--pop); }
+  .dock a:focus-visible { outline: 2px solid var(--pop); outline-offset: 2px; }
+  .dock-sep { width: 1px; align-self: stretch; margin: .3rem .2rem; background: rgba(255,255,255,.18); }
+  .dock-tip {
+    position: absolute; bottom: calc(100% + .65rem); left: 50%; translate: -50% .3rem;
+    white-space: nowrap; padding: .32rem .58rem; border-radius: .4rem;
+    font: 500 .7rem/1 var(--font-mono); letter-spacing: .02em; background: var(--hero); color: var(--hero-ink);
+    box-shadow: 0 .3rem 1rem rgba(0,0,0,.22); opacity: 0; pointer-events: none;
+    transition: opacity .18s ease, translate .22s var(--ease-out);
+  }
+  .dock a:hover .dock-tip, .dock a:focus-visible .dock-tip, .dock.peek a.active .dock-tip { opacity: 1; translate: -50% 0; }
+  html.motion .dock { animation: dockin .8s var(--ease-out) 1.1s both; }
+  @keyframes dockin { from { opacity: 0; translate: -50% 1.2rem; } to { opacity: 1; translate: -50% 0; } }
+
+  /* phones and tablets: a compact icon bar; content keeps clear of it */
+  @media (max-width: 1099px), (orientation: portrait) {
+    .frame { padding-bottom: 7rem !important; }
+    .dock { gap: .3rem; padding: .35rem .4rem; bottom: .7rem; }
+    .dock a { width: 2.35rem; height: 2.35rem; }
+  }
+  @media (max-width: 640px) {
+    .dock .dock-action, .dock .dock-sep { display: none; }
+    .frame { padding-top: 3.8rem; }
+    .hero .frame { padding-top: 0; }
+  }
+
+  /* 16:9 mode: no toolbar any more, so the frames shift their spare room to the bottom for the dock */
+  @media (min-width: 1100px) and (orientation: landscape) {
+    .nav-in { height: 3.2rem; }
+    .frame { padding-top: 3.8rem; padding-bottom: 4.8rem; }
+    .hero .frame { padding-bottom: 6.2rem; }
+    #skills .frame { padding-top: 3.4rem; }
+  }
+
   @media print {
-    header.nav, .theme-toggle, .pager, .next-link { display: none !important; }
+    header.nav, .theme-toggle, .pager, .next-link, .dock { display: none !important; }
     html.router .slide { display: block !important; }
     .hero, .contact { background: #fff; color: #000; }
   }
@@ -667,20 +741,22 @@
 <header class="nav">
   <div class="nav-in">
     <a class="brand" href="#top">Joatham Jacob<span>.</span></a>
-    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu">Menu</button>
-    <nav aria-label="Sections">
-      <ul id="site-menu">
-        <li><a href="#work">Case study</a></li>
-        <li><a href="#more-work">Tools</a></li>
-        <li><a href="#knowledge">Knowledge</a></li>
-        <li><a href="#esg">ESG</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#skills">Credentials</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
   </div>
 </header>
+
+<nav class="dock" aria-label="Pages">
+  <a href="#top" data-to="top" aria-label="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span class="dock-tip" aria-hidden="true">Home</span></a>
+  <a href="#work" data-to="work" aria-label="Case study"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V10l6 4V10l6 4V4h6v17z"/></svg><span class="dock-tip" aria-hidden="true">Case study</span></a>
+  <a href="#more-work" data-to="more-work" aria-label="Tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg><span class="dock-tip" aria-hidden="true">Tools</span></a>
+  <a href="#knowledge" data-to="knowledge" aria-label="Knowledge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5"/></svg><span class="dock-tip" aria-hidden="true">Knowledge</span></a>
+  <a href="#esg" data-to="esg" aria-label="ESG"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19c0-8 6-14 15-14 0 9-6 15-14 15zM5 19l7-7"/></svg><span class="dock-tip" aria-hidden="true">ESG</span></a>
+  <a href="#experience" data-to="experience" aria-label="Experience"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h16v11H4zM9 8V5h6v3"/></svg><span class="dock-tip" aria-hidden="true">Experience</span></a>
+  <a href="#skills" data-to="skills" aria-label="Credentials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8z"/></svg><span class="dock-tip" aria-hidden="true">Credentials</span></a>
+  <a href="#contact" data-to="contact" aria-label="Contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v12H3zM3 7l9 6 9-6"/></svg><span class="dock-tip" aria-hidden="true">Contact</span></a>
+  <span class="dock-sep" aria-hidden="true"></span>
+  <a href="CV.pdf" class="dock-action" data-cv="energy" download aria-label="Download CV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg><span class="dock-tip" aria-hidden="true">Download CV</span></a>
+</nav>
+
 
 <main>
 
@@ -963,7 +1039,7 @@
             <li>GRI, SASB, TCFD, IR, BRSR</li>
             <li>CDP-style questionnaires, EU Taxonomy</li>
           </ul>
-          <p class="k-shown"><span class="k-label">Evidence</span><a href="https://jacob-hub-esg.github.io/csrd-framework/" target="_blank" rel="noopener">CSRD readiness assessment across all ten ESRS</a><span class="sep">·</span>Disclosure benchmarking for international clients at Earth Academy Global</p>
+          <p class="k-shown"><span class="k-label">Evidence</span><a href="https://jacob-hub-esg.github.io/csrd-framework/" target="_blank" rel="noopener">CSRD readiness assessment across all ten ESRS</a><span class="sep">·</span>Disclosure benchmarking at Earth Academy Global<span class="sep">·</span><a href="#skills">GRI, TCFD, IR and SDGs practitioner badges</a></p>
         </article>
         <article class="k-card">
           <h3>Assurance &amp; data quality</h3>
@@ -1070,7 +1146,7 @@
           <div class="skills">
             <div><h3>Software</h3><p>Excel (advanced), Python (pandas), Power BI, React, Tableau, PVsyst, AutoCAD, QGIS</p></div>
             <div><h3>Carbon accounting &amp; reporting</h3><p>GHG Protocol Scope 1–3, CSRD/ESRS, GRI, SASB, TCFD, EU Taxonomy</p></div>
-            <div><h3>Languages</h3><p>English (C1), Italian (B1), Malayalam (native), Tamil, Hindi</p></div>
+            <div><h3>Languages</h3><p>English (C1, IELTS Academic 7.5 overall), Italian (B1), Malayalam (native), Tamil, Hindi</p></div>
           </div>
         </div>
         <div>
@@ -1086,6 +1162,18 @@
             <li>IGBC Accredited Professional <span>IGBC</span></li>
           </ul>
         </div>
+      </div>
+      <div class="badges-wrap">
+        <p class="eyebrow">Earth Academy · practitioner badges</p>
+        <ul class="badges">
+            <li><img src="badge-esg-strategy.webp" alt="ESG Strategy Masterclass badge, Earth Academy" width="320" height="320" loading="lazy" decoding="async"><span>ESG Strategy</span></li>
+            <li><img src="badge-esg-reporting.webp" alt="ESG Reporting Masterclass badge, Earth Academy" width="320" height="320" loading="lazy" decoding="async"><span>ESG Reporting</span></li>
+            <li><img src="badge-gri.webp" alt="Sustainability Reporting: GRI Standards Practitioner badge, Earth Academy" width="320" height="320" loading="lazy" decoding="async"><span>GRI Standards</span></li>
+            <li><img src="badge-tcfd.webp" alt="TCFD Practitioner badge, Earth Academy" width="320" height="320" loading="lazy" decoding="async"><span>TCFD</span></li>
+            <li><img src="badge-integrated-reporting.webp" alt="Integrated Reporting Practitioner badge, Earth Academy" width="320" height="320" loading="lazy" decoding="async"><span>Integrated Reporting</span></li>
+            <li><img src="badge-sdgs-reporting.webp" alt="SDGs Reporting Practitioner badge, Earth Academy" width="320" height="320" loading="lazy" decoding="async"><span>SDGs Reporting</span></li>
+            <li><img src="badge-sustainability-reporting.webp" alt="Sustainability Reporting Practitioner badge, Earth Academy" width="320" height="320" loading="lazy" decoding="async"><span>Sustainability Reporting</span></li>
+        </ul>
       </div>
     </div>
   </section>
@@ -1153,19 +1241,6 @@
     });
   })();
 
-  // Phone menu: open/close, and close after picking a section.
-  (function () {
-    var btn = document.querySelector('.menu-btn'), list = document.getElementById('site-menu');
-    btn.addEventListener('click', function () {
-      var open = list.classList.toggle('open');
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      btn.textContent = open ? 'Close' : 'Menu';
-    });
-    list.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A') { list.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.textContent = 'Menu'; }
-    });
-  })();
-
   // CV buttons: on the live site, point each button at whichever spelling of the file exists
   // (GitHub Pages is case-sensitive), and hide it if none has been uploaded yet.
   (function () {
@@ -1230,10 +1305,14 @@
 
     // Highlight the current screen in the nav and the indicator.
     var navFor = { work: '#work', 'more-work': '#more-work', knowledge: '#knowledge', esg: '#esg', experience: '#experience', skills: '#skills', contact: '#contact' };
-    var navLinks = document.querySelectorAll('header.nav ul a');
+    var dockLinks = document.querySelectorAll('.dock a[data-to]');
     var pagerLinks = pager.querySelectorAll('a');
     function setActive(id) {
-      navLinks.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === navFor[id]); });
+      dockLinks.forEach(function (a) {
+        var on = a.getAttribute('data-to') === id;
+        a.classList.toggle('active', on);
+        if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+      });
       pagerLinks.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + id); });
     }
     if ('IntersectionObserver' in window) {
@@ -1261,6 +1340,11 @@
         }
         window.scrollTo(0, 0);
         document.title = id === 'top' ? baseTitle : labels[id] + ' — Joatham Jacob';
+        if (changed && animate) {
+          var dock = document.querySelector('.dock');
+          dock.classList.remove('peek'); void dock.offsetWidth; dock.classList.add('peek');
+          clearTimeout(dock._peek); dock._peek = setTimeout(function () { dock.classList.remove('peek'); }, 1600);
+        }
         setActive(id);
         var i = ids.indexOf(id);
         prevBtn.disabled = i === 0; nextBtn.disabled = i === ids.length - 1;
@@ -1297,6 +1381,21 @@
 
     if (!motion) return;
 
+    // Dock magnification: icons swell as the pointer passes over them, like a desktop dock.
+    (function () {
+      var dock = document.querySelector('.dock');
+      if (!dock || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+      var links = Array.prototype.slice.call(dock.querySelectorAll('a'));
+      dock.addEventListener('mousemove', function (e) {
+        links.forEach(function (a) {
+          var r = a.getBoundingClientRect(), c = r.left + r.width / 2;
+          var d = Math.abs(e.clientX - c) / (r.width * 2.4);
+          a.style.setProperty('--s', (1 + 0.34 * Math.max(0, 1 - d * d)).toFixed(3));
+        });
+      });
+      dock.addEventListener('mouseleave', function () { links.forEach(function (a) { a.style.removeProperty('--s'); }); });
+    })();
+
     // Count-up numbers (the final value is already in the HTML, so no-JS and reduced-motion visitors see it).
     function countUp(el) {
       var to = parseFloat(el.getAttribute('data-to')), from = parseFloat(el.getAttribute('data-from') || '0');
@@ -1320,7 +1419,7 @@
     var targets = document.querySelectorAll([
       '.slide:not(.hero) .sec-head > *', '.cs-left > *', '.chart-card', '.findings li', '.cs-foot',
       '.card', '.field-head', '.field > div', '.k-card', '.timeline li', '.two-col > div > .eyebrow',
-      '.grad-photo', '.edu-item', '.skills > div', '.certs li', '.contact-body > *', '.contact-foot'
+      '.grad-photo', '.edu-item', '.skills > div', '.certs li', '.badges-wrap > .eyebrow', '.badges li', '.contact-body > *', '.contact-foot'
     ].join(','));
     targets.forEach(function (el) { el.setAttribute('data-reveal', ''); });
 

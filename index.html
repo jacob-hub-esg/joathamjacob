@@ -67,15 +67,15 @@
   /* =========================================================
      Typography — self-hosted webfonts (SIL Open Font License)
      ========================================================= */
-  @font-face { font-family: "IBM Plex Sans"; src: url("fonts/plex-sans-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
-  @font-face { font-family: "IBM Plex Sans"; src: url("fonts/plex-sans-400-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
-  @font-face { font-family: "IBM Plex Sans"; src: url("fonts/plex-sans-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
-  @font-face { font-family: "IBM Plex Sans"; src: url("fonts/plex-sans-600.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
-  @font-face { font-family: "IBM Plex Sans"; src: url("fonts/plex-sans-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
-  @font-face { font-family: "IBM Plex Mono"; src: url("fonts/plex-mono-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
-  @font-face { font-family: "IBM Plex Mono"; src: url("fonts/plex-mono-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
-  @font-face { font-family: "Fraunces"; src: url("fonts/fraunces.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
-  @font-face { font-family: "Fraunces"; src: url("fonts/fraunces-italic.woff2") format("woff2"); font-weight: 100 900; font-style: italic; font-display: swap; }
+  @font-face { font-family: "IBM Plex Sans"; src: url("plex-sans-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: "IBM Plex Sans"; src: url("plex-sans-400-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+  @font-face { font-family: "IBM Plex Sans"; src: url("plex-sans-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+  @font-face { font-family: "IBM Plex Sans"; src: url("plex-sans-600.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+  @font-face { font-family: "IBM Plex Sans"; src: url("plex-sans-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+  @font-face { font-family: "IBM Plex Mono"; src: url("plex-mono-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: "IBM Plex Mono"; src: url("plex-mono-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+  @font-face { font-family: "Fraunces"; src: url("fraunces.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+  @font-face { font-family: "Fraunces"; src: url("fraunces-italic.woff2") format("woff2"); font-weight: 100 900; font-style: italic; font-display: swap; }
   :root {
     --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
     --font-head: "Fraunces", Georgia, "Times New Roman", serif;
@@ -471,6 +471,21 @@
   .certs li { transition: padding-left .25s var(--ease-out), color .25s; }
   .certs li:hover { padding-left: .35rem; }
 
+  /* clickable project cards: the whole card is the link */
+  [data-project].is-link { position: relative; cursor: pointer; }
+  .card-link { position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
+  .card-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .open-cue {
+    margin-left: auto; display: inline-flex; align-items: center; gap: .3rem; text-transform: none; white-space: nowrap;
+    font-family: var(--font-mono); font-size: .68rem; font-weight: 500; letter-spacing: .02em; color: var(--accent-ink);
+    background: var(--accent-soft); padding: .18rem .5rem; border-radius: .3rem;
+  }
+  [data-project].is-link h3 .ext { width: .72em; height: .72em; vertical-align: .05em; color: var(--accent-ink); transition: transform .25s var(--ease-out); }
+  [data-project].is-link:hover h3 .ext { transform: translate(2px, -2px); }
+  .open-cue .ext { width: .8em; height: .8em; transition: transform .25s var(--ease-out); }
+  [data-project].is-link:hover .open-cue .ext { transform: translate(2px, -2px); }
+  [data-project].is-link:hover h3 { color: var(--accent-ink); }
+
   /* nav: underline slides under the section you're on */
   .nav ul a { position: relative; }
   .nav ul a::after {
@@ -621,7 +636,7 @@
         <p class="tagline">From the emissions inventory to the measures that cut it.</p>
         <p class="lede">Two years measuring and reporting emissions for industrial and corporate clients under the GHG Protocol, ISO 14064 and CSRD. Now I also cost and rank the measures that reduce them, using marginal abatement cost curves under EU ETS and CBAM.</p>
         <div class="cta">
-          <a class="btn btn-primary" href="cv.pdf" download>
+          <a class="btn btn-primary" href="CV.pdf" data-cv="energy" download>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 21h16"/></svg>
             Download CV
           </a>
@@ -756,21 +771,20 @@
         <h2>Models, tools and field work</h2>
       </div>
       <div class="grid3">
-        <article class="card">
+        <article class="card" data-project="eaf-macc">
           <div class="kicker">MACC · 2026</div>
           <h3>Abatement cost analysis for a mid-market EAF steel plant</h3>
           <p>I modelled eight interventions for a 500,000 t/yr plant against a 150,000 tCO<sub>2</sub>e baseline at an 8% discount rate. Sensitivity on EU allowance prices shows the carbon price at which each capital-intensive measure turns viable.</p>
           <div class="metric"><b class="num">~6,000 tCO<sub>2</sub>e/yr</b> of negative-cost abatement found, for €2.7M capex</div>
           <div class="stack"><span>Excel</span><span>NPV</span><span>Sensitivity</span></div>
         </article>
-        <article class="card">
+        <article class="card" data-project="abatement-app">
           <div class="kicker">Tool · 2026</div>
           <h3>Interactive abatement cost &amp; energy finance app</h3>
           <p>A React application that calculates payback, NPV, IRR, LCOE and levelised cost of abatement from user inputs, with a custom waterfall chart and a carbon-price reference line. Built end to end with LLM-assisted development and deployed with GitHub Actions.</p>
           <div class="stack" style="margin-top:auto"><span>React</span><span>Vite</span><span>GitHub Actions</span></div>
-          <a class="link-arrow" href="REPLACE_WITH_APP_URL" target="_blank" rel="noopener">Open the live app <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </article>
-        <article class="card">
+        <article class="card" data-project="monitoring">
           <div class="kicker">Monitoring <span class="status">In progress</span></div>
           <h3>Energy performance monitoring pipeline</h3>
           <p>A Python pipeline that takes hourly meter data and builds a weather-normalised baseline by degree-day regression. It flags deviations from expected consumption and reports them in Power BI, in the form of ISO 50001 energy performance monitoring.</p>
@@ -780,15 +794,15 @@
 
       <h3 class="field-head">Field work</h3>
       <div class="field">
-        <div>
+        <div data-project="railway-audits">
           <h3>Energy audits: 8 railway stations, Bihar (India)</h3>
           <p>A 25-day multi-site campaign: site surveys, load analysis, energy and water consumption measurement, and a report for each site with prioritised interventions.</p>
         </div>
-        <div>
+        <div data-project="biogas">
           <h3>Biogas plant evaluation, Palakkad (India)</h3>
           <p>An on-site assessment of an operating plant against its design specification, with root-cause analysis of the underperformance and lab testing of feedstock variants.</p>
         </div>
-        <div>
+        <div data-project="solar">
           <h3>Solar &amp; waste-to-resource engineering</h3>
           <p>Solar PV sizing and cost estimation in PVsyst. For my B.Tech thesis I designed and built a solar-powered trash compactor, published by TNAU in 2020.</p>
         </div>
@@ -1021,8 +1035,8 @@
         <div class="cta">
           <a class="btn btn-primary" href="mailto:joathamjacob@gmail.com">joathamjacob@gmail.com</a>
           <a class="btn btn-ghost" href="https://www.linkedin.com/in/joatham-jacob" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="btn btn-ghost" href="cv.pdf" download>Energy CV</a>
-          <a class="btn btn-ghost" href="cv-esg.pdf" download>ESG CV</a>
+          <a class="btn btn-ghost" href="CV.pdf" data-cv="energy" download>Energy CV</a>
+          <a class="btn btn-ghost" href="cv-esg.pdf" data-cv="esg" download>ESG CV</a>
         </div>
       </div>
       <div class="contact-foot">
@@ -1034,6 +1048,46 @@
 </main>
 
 <script>
+  /* =====================================================================
+     PROJECT LINKS — paste each project's web address between the quotes.
+     A project with an address becomes a clickable card that opens it in
+     a new tab; one left empty stays a plain card. The label is the text
+     shown at the bottom of the card.
+     ===================================================================== */
+  var PROJECT_LINKS = {
+    'eaf-macc':       { url: '', label: 'Open model' },     // Abatement cost analysis, mid-market EAF plant
+    'abatement-app':  { url: '', label: 'Open app' },       // Interactive abatement cost & energy finance app
+    'monitoring':     { url: '', label: 'Dashboard' }, // Energy performance monitoring pipeline
+    'railway-audits': { url: '', label: 'Open report' },    // Field work: railway station audits
+    'biogas':         { url: '', label: 'Open report' },    // Field work: biogas plant evaluation
+    'solar':          { url: '', label: 'Open project' }     // Field work: solar & waste-to-resource
+  };
+
+  // Turn every project that has an address into a clickable card.
+  (function () {
+    var ext = '<svg class="ext" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h7v7M13 3 4 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    document.querySelectorAll('[data-project]').forEach(function (el) {
+      var entry = PROJECT_LINKS[el.getAttribute('data-project')];
+      if (!entry || !entry.url) return;
+      var title = (el.querySelector('h3') || {}).textContent || 'project';
+      el.classList.add('is-link');
+      if (el.classList.contains('card')) {
+        // Cards: a small "Open …" tag in the top-right corner (adds no height).
+        var cue = document.createElement('span');
+        cue.className = 'open-cue'; cue.setAttribute('aria-hidden', 'true');
+        cue.innerHTML = entry.label + ' ' + ext;
+        (el.querySelector('.kicker') || el).appendChild(cue);
+      } else if (el.querySelector('h3')) {
+        // Field-work items: an arrow after the title.
+        el.querySelector('h3').insertAdjacentHTML('beforeend', ' ' + ext);
+      }
+      var a = document.createElement('a');
+      a.className = 'card-link'; a.href = entry.url; a.target = '_blank'; a.rel = 'noopener';
+      a.setAttribute('aria-label', entry.label + ': ' + title + ' (opens in a new tab)');
+      el.appendChild(a);
+    });
+  })();
+
   // Phone menu: open/close, and close after picking a section.
   (function () {
     var btn = document.querySelector('.menu-btn'), list = document.getElementById('site-menu');
@@ -1047,13 +1101,23 @@
     });
   })();
 
-  // On the live site, hide each CV button until its PDF has been uploaded next to this page.
+  // CV buttons: on the live site, point each button at whichever spelling of the file exists
+  // (GitHub Pages is case-sensitive), and hide it if none has been uploaded yet.
   (function () {
     if (!/^https?:$/.test(location.protocol)) return;
-    ['cv.pdf', 'cv-esg.pdf'].forEach(function (file) {
-      fetch(file, { method: 'HEAD', cache: 'no-store' }).then(function (r) {
-        if (!r.ok) document.querySelectorAll('a[href="' + file + '"]').forEach(function (a) { a.remove(); });
-      }).catch(function () {});
+    var names = {
+      energy: ['CV.pdf', 'cv.pdf', 'Cv.pdf', 'cv-energy.pdf', 'CV-energy.pdf'],
+      esg: ['cv-esg.pdf', 'CV-ESG.pdf', 'CV-esg.pdf', 'cv_esg.pdf', 'ESG-CV.pdf', 'esg-cv.pdf']
+    };
+    Object.keys(names).forEach(function (kind) {
+      var buttons = document.querySelectorAll('a[data-cv="' + kind + '"]'), list = names[kind].slice();
+      (function tryNext() {
+        var file = list.shift();
+        if (!file) { buttons.forEach(function (a) { a.remove(); }); return; }
+        fetch(file, { method: 'HEAD', cache: 'no-store' }).then(function (r) {
+          if (r.ok) buttons.forEach(function (a) { a.setAttribute('href', file); }); else tryNext();
+        }).catch(tryNext);
+      })();
     });
   })();
 

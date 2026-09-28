@@ -8,8 +8,10 @@
   if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.classList.add('motion');
   }
-  // Pages: show one section at a time. The address after # decides which (e.g. #esg); none = landing page.
+  // Pages (laptops and desktops only): show one section at a time. The address after # decides which
+  // (e.g. #esg); none = landing page. Phones and tablets keep one long scrolling page with the menu bar.
   (function () {
+    if (!window.matchMedia('(min-width: 1100px) and (orientation: landscape)').matches) return;
     var d = document.documentElement, pages = ['top', 'work', 'more-work', 'knowledge', 'esg', 'experience', 'skills', 'contact'];
     var h = (location.hash || '').slice(1);
     d.classList.add('router');
@@ -648,11 +650,6 @@
   html.motion .slide.entering > .frame { animation: pagein .55s var(--ease-out) both; }
   html.motion .slide.entering.hero .hero-bg, html.motion .slide.entering.contact { animation: fadein .5s ease-out both; }
 
-  /* "Next page" link at the bottom of each page (phones and tablets) */
-  .next-link { display: inline-flex; align-items: center; gap: .4rem; margin-top: 2.4rem; font-weight: 600; text-decoration: none; }
-  .next-link:hover .arr { transform: translateX(3px); }
-  .next-link .arr { transition: transform .25s var(--ease-out); }
-
   /* page dots: previous / next arrows */
   .pager .pg-step {
     display: grid; place-items: center; width: 1.1rem; height: 1.1rem; padding: 0; border: 0; background: none;
@@ -669,15 +666,13 @@
     html.router[data-page="knowledge"] #knowledge, html.router[data-page="esg"] #esg, html.router[data-page="experience"] #experience,
     html.router[data-page="skills"] #skills, html.router[data-page="contact"] #contact { display: flex; flex-direction: column; justify-content: center; }
     html.router .slide > .frame { height: 45rem; flex: none; }
-    .next-link { display: none; }
   }
 
   /* =========================================================
-     Floating dock: the site's navigation.
+     Floating dock: the navigation on laptops and desktops (16:9 mode).
+     Phones and tablets keep the top menu bar and one long scrolling page.
      ========================================================= */
-  header.nav, header.nav.solid { position: absolute; background: transparent !important; border: 0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
-  html.router:not([data-page="top"]):not([data-page="contact"]) .brand { color: var(--ink); text-shadow: none; }
-  .pager { display: none !important; }
+  .pager, .dock { display: none !important; }
 
   .dock {
     position: fixed; left: 50%; bottom: .9rem; translate: -50% 0; z-index: 20;
@@ -709,20 +704,12 @@
   html.motion .dock { animation: dockin .8s var(--ease-out) 1.1s both; }
   @keyframes dockin { from { opacity: 0; translate: -50% 1.2rem; } to { opacity: 1; translate: -50% 0; } }
 
-  /* phones and tablets: a compact icon bar; content keeps clear of it */
-  @media (max-width: 1099px), (orientation: portrait) {
-    .frame { padding-bottom: 7rem !important; }
-    .dock { gap: .3rem; padding: .35rem .4rem; bottom: .7rem; }
-    .dock a { width: 2.35rem; height: 2.35rem; }
-  }
-  @media (max-width: 640px) {
-    .dock .dock-action, .dock .dock-sep { display: none; }
-    .frame { padding-top: 3.8rem; }
-    .hero .frame { padding-top: 0; }
-  }
-
-  /* 16:9 mode: no toolbar any more, so the frames shift their spare room to the bottom for the dock */
+  /* 16:9 mode: the dock replaces the toolbar, so the frames shift their spare room to the bottom for it */
   @media (min-width: 1100px) and (orientation: landscape) {
+    .dock { display: flex !important; }
+    header.nav, header.nav.solid { position: absolute; background: transparent !important; border: 0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+    header.nav nav, header.nav .menu-btn { display: none !important; }
+    html.router:not([data-page="top"]):not([data-page="contact"]) .brand { color: var(--ink); text-shadow: none; }
     .nav-in { height: 3.2rem; }
     .frame { padding-top: 3.8rem; padding-bottom: 4.8rem; }
     .hero .frame { padding-bottom: 6.2rem; }
@@ -741,6 +728,18 @@
 <header class="nav">
   <div class="nav-in">
     <a class="brand" href="#top">Joatham Jacob<span>.</span></a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu">Menu</button>
+    <nav aria-label="Sections">
+      <ul id="site-menu">
+        <li><a href="#work">Case study</a></li>
+        <li><a href="#more-work">Tools</a></li>
+        <li><a href="#knowledge">Knowledge</a></li>
+        <li><a href="#esg">ESG</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#skills">Credentials</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
   </div>
 </header>
 
@@ -1261,6 +1260,19 @@
     });
   })();
 
+  // Phone menu: open/close, and close after picking a section.
+  (function () {
+    var btn = document.querySelector('.menu-btn'), list = document.getElementById('site-menu');
+    function close() { list.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.textContent = 'Menu'; }
+    btn.addEventListener('click', function () {
+      var open = list.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.textContent = open ? 'Close' : 'Menu';
+    });
+    list.addEventListener('click', function (e) { if (e.target.tagName === 'A') close(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && list.classList.contains('open')) { close(); btn.focus(); } });
+  })();
+
   // Hide any link still pointing at a placeholder, so nothing broken shows on the live site.
   document.querySelectorAll('a[href^="REPLACE_"]').forEach(function (a) { a.remove(); });
 
@@ -1275,6 +1287,7 @@
     update();
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('hashchange', function () { setTimeout(update, 0); });
+    window.addEventListener('pagesmodechange', update);
   })();
 
   // ---------- Motion ----------
@@ -1306,8 +1319,12 @@
     // Highlight the current screen in the nav and the indicator.
     var navFor = { work: '#work', 'more-work': '#more-work', knowledge: '#knowledge', esg: '#esg', experience: '#experience', skills: '#skills', contact: '#contact' };
     var dockLinks = document.querySelectorAll('.dock a[data-to]');
+    var navLinks = document.querySelectorAll('header.nav ul a');
     var pagerLinks = pager.querySelectorAll('a');
+    var inView = 'top';
     function setActive(id) {
+      if (!slideMode.matches) inView = id;   // remembered for a switch to 16:9 mode
+      navLinks.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === navFor[id]); });
       dockLinks.forEach(function (a) {
         var on = a.getAttribute('data-to') === id;
         a.classList.toggle('active', on);
@@ -1320,13 +1337,20 @@
         entries.forEach(function (e) { if (e.isIntersecting) setActive(e.target.id); });
       }, { rootMargin: '-50% 0px -50% 0px' });
       slides.forEach(function (s) { activeObserver.observe(s); });
+      // The last section is short, so mark it once the scrolling page reaches the bottom.
+      window.addEventListener('scroll', function () {
+        if (root.classList.contains('router')) return;
+        if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) setActive(ids[ids.length - 1]);
+      }, { passive: true });
     }
     setActive('top');
 
-    // ---------- Pages ----------
-    if (root.classList.contains('router')) {
+    // ---------- Pages (laptops and desktops) ----------
+    // Phones and tablets scroll through every section; laptops and desktops show one page at a time.
+    (function () {
       var baseTitle = document.title;
       var current = root.getAttribute('data-page') || 'top';
+      function on() { return root.classList.contains('router'); }
       function go(id) { location.hash = id === 'top' ? '#top' : '#' + id; }
       function show(id, animate) {
         if (ids.indexOf(id) < 0) id = 'top';
@@ -1353,13 +1377,13 @@
           if (heading) { heading.setAttribute('tabindex', '-1'); heading.focus({ preventScroll: true }); }
         }
       }
-      window.addEventListener('hashchange', function () { show(location.hash.slice(1), true); });
+      window.addEventListener('hashchange', function () { if (on()) show(location.hash.slice(1), true); });
       prevBtn.addEventListener('click', function () { var i = ids.indexOf(current); if (i > 0) go(ids[i - 1]); });
       nextBtn.addEventListener('click', function () { var i = ids.indexOf(current); if (i < ids.length - 1) go(ids[i + 1]); });
 
       // Keyboard: arrow keys / Page Up / Page Down move between pages on laptops and desktops.
       document.addEventListener('keydown', function (e) {
-        if (!slideMode.matches || e.altKey || e.ctrlKey || e.metaKey) return;
+        if (!on() || !slideMode.matches || e.altKey || e.ctrlKey || e.metaKey) return;
         var tag = (e.target.tagName || '').toLowerCase();
         if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
         var i = ids.indexOf(current);
@@ -1367,17 +1391,29 @@
         if (['ArrowLeft', 'ArrowUp', 'PageUp'].indexOf(e.key) > -1 && i > 0) { e.preventDefault(); go(ids[i - 1]); }
       });
 
-      // Phones and tablets: a "Next: …" link at the end of each page.
-      slides.forEach(function (s, i) {
-        if (i === 0 || i === slides.length - 1) return;
-        var a = document.createElement('a');
-        a.className = 'next-link'; a.href = '#' + ids[i + 1];
-        a.innerHTML = 'Next: ' + labels[ids[i + 1]] + ' <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-        s.querySelector('.frame').appendChild(a);
-      });
+      if (on()) show(current, false);
 
-      show(current, false);
-    }
+      // Switching layout (rotating a tablet, resizing a window) keeps the visitor on the same section.
+      function modeChange() {
+        if (slideMode.matches && !on()) {
+          var id = inView;
+          root.classList.add('router');
+          current = null; show(id, false);
+          if (history.replaceState) history.replaceState(null, '', '#' + id);
+        } else if (!slideMode.matches && on()) {
+          var here = current;
+          root.classList.remove('router'); root.removeAttribute('data-page');
+          document.title = baseTitle;
+          var el = document.getElementById(here);
+          requestAnimationFrame(function () {
+            if (here === 'top' || !el) window.scrollTo({ top: 0, behavior: 'instant' });
+            else el.scrollIntoView({ behavior: 'instant' });
+          });
+        }
+        window.dispatchEvent(new Event('pagesmodechange'));
+      }
+      if (slideMode.addEventListener) slideMode.addEventListener('change', modeChange); else if (slideMode.addListener) slideMode.addListener(modeChange);
+    })();
 
     if (!motion) return;
 

@@ -24,7 +24,7 @@
 <meta property="og:description" content="GHG inventories, CSRD reporting, industrial energy efficiency and marginal abatement cost modelling. Based in Milan.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="hero.jpg">
-<link rel="preload" href="UnifrakturMaguntia-Regular.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="bebas-neue.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23053b2d'/%3E%3Ctext x='16' y='21.5' font-family='Arial,sans-serif' font-size='14' font-weight='700' fill='%2334d399' text-anchor='middle'%3EJJ%3C/text%3E%3C/svg%3E">
 <style>
   /* =========================================================
@@ -86,8 +86,9 @@
   @font-face { font-family: "IBM Plex Mono"; src: url("plex-mono-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
   @font-face { font-family: "Fraunces"; src: url("fraunces.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
   @font-face { font-family: "Fraunces"; src: url("fraunces-italic.woff2") format("woff2"); font-weight: 100 900; font-style: italic; font-display: swap; }
-  /* Landing-page name only. UnifrakturMaguntia, SIL Open Font License (licence text is embedded in the font file). */
-  @font-face { font-family: "UnifrakturMaguntia"; src: url("UnifrakturMaguntia-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+  /* Landing-page name only. Bebas Neue, SIL Open Font License (see LICENSE-BebasNeue-OFL.txt). */
+  @font-face { font-family: "Bebas Neue"; src: url("bebas-neue.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   :root {
     --font-body: "Quicksand", system-ui, -apple-system, "Segoe UI", sans-serif;
     --font-head: "Fraunces", Georgia, "Times New Roman", serif;
@@ -185,7 +186,7 @@
   .hero .frame { padding-top: .25rem; padding-bottom: 3.25rem; }
   .hero .eyebrow { color: var(--pop); }
   .hero h1 { font-size: clamp(2.4rem, 8.4vw, 3.5rem); line-height: 1.02; margin: 0 0 .6rem; }
-  .hero h1 { font-family: "UnifrakturMaguntia", var(--font-head); font-weight: 400; letter-spacing: 0; font-synthesis: none; font-size: clamp(2.6rem, 9.4vw, 3.9rem); line-height: 1.08; }
+  .hero h1 { font-family: "Bebas Neue", var(--font-body); font-weight: 400; letter-spacing: .02em; font-synthesis: none; font-size: clamp(3.4rem, 15vw, 5rem); line-height: .92; }
   .hero .tagline { font-size: clamp(1.3rem, 4.6vw, 1.7rem); line-height: 1.2; margin: 0 0 .9rem; font-style: italic; font-weight: 400; }
   .hero .lede { line-height: 1.6; color: var(--hero-ink-2); margin: 0 0 1.5rem; max-width: 60ch; }
 
@@ -446,7 +447,7 @@
     .hero .frame { position: relative; z-index: 1; flex-direction: row; align-items: flex-end; justify-content: flex-end; padding-bottom: 3.6rem; }
     .hero-text { width: 30.5rem; }
     .hero .eyebrow { margin-bottom: .8rem; }
-    .hero h1 { font-size: 3.95rem; margin-bottom: .5rem; text-shadow: 0 2px 24px rgba(0,0,0,.25); }
+    .hero h1 { font-size: 5.2rem; margin-bottom: .45rem; text-shadow: 0 2px 24px rgba(0,0,0,.25); }
     .hero .tagline { font-size: 1.5rem; margin-bottom: .8rem; }
     .hero .lede { margin-bottom: 1.4rem; color: #d3e3dc; }
     .hero .btn { padding: .62rem 1.05rem; }
@@ -844,7 +845,7 @@
   <a href="#skills" data-to="skills" aria-label="Credentials"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8z"/></svg><span class="dock-tip" aria-hidden="true">Credentials</span></a>
   <a href="#contact" data-to="contact" aria-label="Contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v12H3zM3 7l9 6 9-6"/></svg><span class="dock-tip" aria-hidden="true">Contact</span></a>
   <span class="dock-sep" aria-hidden="true"></span>
-  <a href="CV.pdf" class="dock-action" data-cv="energy" download aria-label="Download CV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg><span class="dock-tip" aria-hidden="true">Download CV</span></a>
+  <a href="CV.pdf" class="dock-action" data-cv="energy" download="Joatham_Jacob_CV.pdf" aria-label="Download CV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg><span class="dock-tip" aria-hidden="true">Download CV</span></a>
 </nav>
 
 
@@ -864,7 +865,7 @@
         <p class="tagline">From the emissions inventory to the measures that cut it.</p>
         <p class="lede">Two years measuring emissions for industrial and corporate clients under the GHG Protocol, ISO 14064 and CSRD. Now I also rank the measures that cut them on marginal abatement cost curves, under EU ETS and CBAM.</p>
         <div class="cta">
-          <a class="btn btn-primary" href="CV.pdf" data-cv="energy" download>
+          <a class="btn btn-primary" href="CV.pdf" data-cv="energy" download="Joatham_Jacob_CV.pdf">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 21h16"/></svg>
             Download CV
           </a>
@@ -1316,7 +1317,7 @@
         <div class="cta">
           <a class="btn btn-primary" href="mailto:joathamjacob@gmail.com">joathamjacob@gmail.com</a>
           <a class="btn btn-ghost" href="https://www.linkedin.com/in/joatham-jacob" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="btn btn-ghost" href="CV.pdf" data-cv="energy" download>Energy CV</a>
+          <a class="btn btn-ghost" href="CV.pdf" data-cv="energy" download="Joatham_Jacob_CV.pdf">Energy CV</a>
           <a class="btn btn-ghost" href="cv-esg.pdf" data-cv="esg" download>ESG CV</a>
         </div>
       </div>

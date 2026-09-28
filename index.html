@@ -256,13 +256,35 @@
   /* ---------- experience & education ---------- */
   .two-col { display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
   .timeline { list-style: none; margin: 0; padding: 0; }
-  .timeline li { position: relative; padding: 0 0 1.5rem 1.6rem; }
-  .timeline li::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--line); transform-origin: top; }
-  .timeline li:last-child { padding-bottom: 0; }
-  .timeline li::before { content: ""; position: absolute; left: -.28rem; top: .45rem; width: .56rem; height: .56rem; border-radius: 50%; background: var(--accent); z-index: 1; }
+  .swipe-dots { display: none; }
+  .timeline > li { position: relative; padding: 0 0 1.5rem 1.6rem; }
+  .timeline > li::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--line); transform-origin: top; }
+  .timeline > li:last-child { padding-bottom: 0; }
+  .timeline > li::before { content: ""; position: absolute; left: -.28rem; top: .45rem; width: .56rem; height: .56rem; border-radius: 50%; background: var(--accent); z-index: 1; }
   .when { font-size: .8rem; color: var(--ink-3); font-weight: 500; }
   .timeline h3 { font-size: 1.05rem; margin: .1rem 0; }
   .org { font-size: .9rem; color: var(--ink-2); margin-bottom: .3rem; }
+  /* experience: each role opens to show its detail; one open at a time */
+  .xp-item > summary { display: block; list-style: none; cursor: pointer; position: relative; padding-right: 2rem; border-radius: .4rem; }
+  .xp-item > summary::-webkit-details-marker { display: none; }
+  .xp-item > summary::after {
+    content: ""; position: absolute; right: .45rem; top: .45rem; width: .5rem; height: .5rem;
+    border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(45deg); transition: transform .3s var(--ease-out);
+  }
+  .xp-item[open] > summary::after { transform: translateY(.2rem) rotate(-135deg); }
+  .xp-item > summary:hover h3 { color: var(--accent-ink); }
+  .xp-item > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .xp-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .7rem; }
+  .xp-item .org { margin-bottom: 0; }
+  .xp-meta .when { font-size: .74rem; }
+  .xp-sum { display: block; }
+  .xp-sum { font-size: .9rem; color: var(--ink-2); margin-top: .2rem; line-height: 1.5; }
+  .xp-item[open] .xp-sum { display: none; }
+  .xp-list { list-style: none; margin: .45rem 0 0; padding: 0; display: grid; gap: .3rem; }
+  .xp-list li { position: relative; padding-left: .95rem; font-size: .88rem; color: var(--ink-2); line-height: 1.5; }
+  .xp-list li::before { content: ""; position: absolute; left: 0; top: .7em; width: .4rem; height: 2px; border-radius: 1px; background: var(--accent); }
+  .xp-list b { color: var(--ink); font-weight: 600; }
+  html.motion .xp-item[open] .xp-list { animation: pagein .45s var(--ease-out) both; }
   .timeline p { margin: 0; font-size: .92rem; color: var(--ink-2); line-height: 1.55; }
   .grad-photo {
     aspect-ratio: 2 / 1; border-radius: .75rem; overflow: hidden; margin: 0 0 1.2rem; position: relative;
@@ -345,6 +367,21 @@
   }
   /* ---------- phones ---------- */
   @media (max-width: 640px) {
+    /* card grids become sideways-swipe rows, the next card peeking in */
+    .swipe {
+      display: grid; grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 84%; gap: .8rem;
+      overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
+      margin: 0 -1rem; padding: .25rem 1rem .4rem; scroll-padding: 0 1rem;
+    }
+    .swipe::-webkit-scrollbar { display: none; }
+    .swipe > * { scroll-snap-align: start; }
+    .swipe-dots { display: flex; justify-content: center; gap: .4rem; margin-top: .7rem; }
+    .swipe-dots button { width: .5rem; height: .5rem; padding: 0; border: 0; border-radius: 999px; background: var(--line); cursor: pointer; transition: width .3s var(--ease-out), background-color .3s; }
+    .swipe-dots button[aria-current="true"] { width: 1.3rem; background: var(--accent); }
+    /* badges: four to a row instead of three */
+    .badges { grid-template-columns: repeat(4, 1fr); gap: .9rem .6rem; }
+    .badges span { font-size: .6rem; }
+    .badges-wrap { margin-top: 1.8rem; }
     .frame, .nav-in { padding-left: 1rem; padding-right: 1rem; }
     .frame { padding-top: 3.5rem; padding-bottom: 3.5rem; }
     .hero-bg { aspect-ratio: 4 / 5; }
@@ -424,8 +461,11 @@
     /* experience */
     .two-col { grid-template-columns: 1.3fr 1fr; gap: 3.2rem; }
     .timeline p { font-size: .82rem; }
+    .xp-sum { font-size: .82rem; }
+    .xp-list li { font-size: .8rem; line-height: 1.45; }
+    .xp-list { gap: .22rem; margin-top: .35rem; }
     #experience .sec-head p:not(.eyebrow) { font-size: .92rem; max-width: none; }
-    .timeline li { padding-bottom: 1rem; }
+    .timeline > li { padding-bottom: 1rem; }
     .grad-photo { margin-bottom: .8rem; aspect-ratio: 3 / 1; background-position: 47% 30%; }
     .edu-item { margin-bottom: .9rem; }
     .edu-item h3 { font-size: .98rem; }
@@ -436,14 +476,14 @@
     /* more work: six compact cards, three per row */
     #more-work .sec-head { margin-bottom: 1.2rem; }
     .grid3.tools { gap: 1.1rem 1.4rem; flex: 1; min-height: 0; }
-    .grid3.tools .card { padding: .95rem 1.1rem .85rem; }
-    .grid3.tools .card h3 { font-size: .98rem; line-height: 1.25; margin-bottom: .4rem; }
-    .grid3.tools .card p { font-size: .74rem; line-height: 1.5; margin-bottom: .6rem; }
-    .grid3.tools .kicker { margin-bottom: .45rem; font-size: .66rem; }
+    .grid3.tools .card { padding: 1.1rem 1.25rem 1rem; }
+    .grid3.tools .card h3 { font-size: 1.1rem; line-height: 1.25; margin-bottom: .5rem; }
+    .grid3.tools .card p { font-size: .86rem; line-height: 1.55; margin-bottom: .6rem; }
+    .grid3.tools .kicker { margin-bottom: .55rem; font-size: .68rem; }
     .grid3.tools .stack { margin-top: auto; }
-    .grid3.tools .stack span { font-size: .62rem; }
-    .field-card .k-list { gap: .35rem; margin: 0; }
-    .field-card .k-list li { font-size: .72rem; line-height: 1.45; }
+    .grid3.tools .stack span { font-size: .66rem; }
+    .field-card .k-list { gap: .45rem; margin: 0; }
+    .field-card .k-list li { font-size: .8rem; line-height: 1.5; }
 
     /* knowledge: four areas side by side */
     #knowledge .sec-head { margin-bottom: 1.2rem; }
@@ -592,10 +632,10 @@
   html.motion .chart-card .bar:nth-child(4) text { transition-delay: 1.35s; }
 
   /* experience timeline draws itself, dots pop in */
-  html.motion .timeline li::after { transition: transform .9s var(--ease-out) .1s; }
-  html.motion .timeline li:not(.drawn)::after { transform: scaleY(0); }
-  html.motion .timeline li::before { transition: transform .5s var(--ease-spring); }
-  html.motion .timeline li:not(.drawn)::before { transform: scale(0); }
+  html.motion .timeline > li::after { transition: transform .9s var(--ease-out) .1s; }
+  html.motion .timeline > li:not(.drawn)::after { transform: scaleY(0); }
+  html.motion .timeline > li::before { transition: transform .5s var(--ease-spring); }
+  html.motion .timeline > li:not(.drawn)::before { transform: scale(0); }
 
   /* education photo eases in */
   html.motion .grad-photo { transition: opacity .9s var(--ease-out), transform .9s var(--ease-out), background-size 1.6s var(--ease-out); }
@@ -779,7 +819,7 @@
         <p class="eyebrow">Energy · Decarbonization · ESG — Milan</p>
         <h1>Joatham Jacob</h1>
         <p class="tagline">From the emissions inventory to the measures that cut it.</p>
-        <p class="lede">Two years measuring and reporting emissions for industrial and corporate clients under the GHG Protocol, ISO 14064 and CSRD. Now I also cost and rank the measures that reduce them, using marginal abatement cost curves under EU ETS and CBAM.</p>
+        <p class="lede">Two years measuring emissions for industrial and corporate clients under the GHG Protocol, ISO 14064 and CSRD. Now I also rank the measures that cut them on marginal abatement cost curves, under EU ETS and CBAM.</p>
         <div class="cta">
           <a class="btn btn-primary" href="CV.pdf" data-cv="energy" download>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 21h16"/></svg>
@@ -799,7 +839,7 @@
         <div class="cs-left">
           <span class="tag">Featured case study · 2026</span>
           <h2 class="cs-title">Decarbonising an already-green plant: Acciaieria Arvedi, Cremona</h2>
-          <p class="cs-summary">Arvedi's Cremona EAF steelworks was the first steelmaker to hold a certified net-zero claim. I set the reported figure aside, rebuilt the physical Scope 1 baseline from EU ETS verified emissions, and costed a 2030 abatement package.</p>
+          <p class="cs-summary">The first steelmaker with a certified net-zero claim. I set the claim aside, rebuilt the EAF plant's physical Scope 1 baseline from EU ETS data and costed a 2030 abatement package.</p>
           <div class="stats">
             <div class="stat"><div class="v num"><span class="count" data-to="434844">434,844</span> <small>tCO<sub>2</sub></small></div><div class="l">Verified Scope 1 baseline, CY2023 (EU ETS)</div></div>
             <div class="stat"><div class="v num"><span class="count" data-to="44.3" data-dec="1" data-suf="%">44.3%</span></div><div class="l">Abated by the 2030 package: 192,494 tCO<sub>2</sub>/yr</div></div>
@@ -810,7 +850,7 @@
 
         <div class="chart-card">
           <p class="panel-title">2030 marginal abatement cost curve</p>
-          <p class="panel-sub">Bar width = tCO<sub>2</sub> abated per year · height = cost per tonne abated (modelled)</p>
+          <p class="panel-sub">Width = tCO<sub>2</sub> abated per year · height = €/tCO<sub>2</sub> (modelled)</p>
           <div class="chart">
             <svg viewBox="0 0 560 300" role="img" aria-labelledby="macc-t macc-d">
               <title id="macc-t">Arvedi 2030 marginal abatement cost curve</title>
@@ -893,15 +933,15 @@
         </div>
 
         <ol class="findings">
-          <li><strong>One physical result, three accounting choices.</strong> The 138 kg CO<sub>2</sub>/t intensity is real. Market-based Scope 2, forestry offsets and a Scope 3 exclusion make up the rest of the net-zero claim.</li>
-          <li><strong>Emissions are near a record high.</strong> Verified Scope 1 has risen about fifteen-fold since 2005, and the plant is net short 82,536 allowances.</li>
-          <li><strong>A real 2030 pathway is affordable.</strong> It clears the Mission Possible Partnership steel trajectory at under 2% of product value.</li>
-          <li><strong>59% of it depends on one measure.</strong> Biocarbon needs about 36,400 t/yr of certified biochar, against a European market of tens of kilotonnes.</li>
+          <li><strong>One physical result, three accounting choices.</strong> Only the 138 kg CO<sub>2</sub>/t intensity is physical; market-based Scope 2, offsets and a Scope 3 exclusion do the rest.</li>
+          <li><strong>Emissions are near a record high.</strong> Verified Scope 1 is up about fifteen-fold since 2005; the plant is net short 82,536 allowances.</li>
+          <li><strong>A real 2030 pathway is affordable.</strong> It clears the Mission Possible Partnership trajectory at under 2% of product value.</li>
+          <li><strong>59% of it depends on one measure.</strong> Biocarbon needs ~36,400 t/yr of certified biochar; Europe's market is tens of kilotonnes.</li>
         </ol>
 
         <div class="cs-foot">
           <a class="link-arrow" href="arvedi-case-study.pdf" target="_blank" rel="noopener">Read the full study (PDF, 39 pp.) <svg class="arr" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-          <p class="note">Capex and opex are <strong>modelled engineering estimates</strong> from public sources, not supplier quotes. The Scope 1 baseline is the only third-party-verified input.</p>
+          <p class="note">Capex and opex are <strong>modelled estimates</strong> from public sources, not supplier quotes. Only the Scope 1 baseline is third-party verified.</p>
         </div>
       </div>
     </div>
@@ -914,44 +954,44 @@
         <p class="eyebrow">More work</p>
         <h2>Tools I've built, and field work</h2>
       </div>
-      <div class="grid3 tools">
+      <div class="grid3 tools swipe" aria-label="Tools and field work">
         <article class="card" data-project="macc-app">
           <div class="kicker">Decarbonization · 2026</div>
           <h3>MACC and project finance tool</h3>
-          <p>Builds a marginal abatement cost curve with measures ordered cheapest first and bar width set by annual abatement. For each measure it calculates payback, NPV at two discount rates, IRR, LCOE and levelised cost of abatement, and updates live as the EU ETS price or measures change.</p>
+          <p>Live abatement cost curve, cheapest measures first, with payback, NPV, IRR, LCOE and levelised abatement cost per measure. Updates with the EU ETS price.</p>
           <div class="stack"><span>React</span><span>Vite</span><span>SVG charts</span></div>
         </article>
         <article class="card" data-project="building-tool">
           <div class="kicker">Buildings · 2026</div>
           <h3>Building emissions benchmark &amp; decarbonisation tool</h3>
-          <p>Scope 1 and 2 emissions for buildings in 20 European countries and six building types, using country-specific IEA grid factors. It benchmarks carbon intensity against EU peers, checks CSRD readiness and projects a pathway to net zero by 2050.</p>
+          <p>Scope 1–2 for six building types in 20 European countries on IEA grid factors, benchmarked against EU peers, with CSRD checks and a 2050 net-zero pathway.</p>
           <div class="stack"><span>GHG Protocol</span><span>ESRS E1</span><span>React</span></div>
         </article>
         <article class="card" data-project="csrd-readiness">
           <div class="kicker">ESG reporting · 2026</div>
           <h3>CSRD readiness assessment</h3>
-          <p>About 40 weighted questions across all ten ESRS topics. It scores readiness from 0 to 100 for each section and overall, flags the priority gaps with recommended actions, and shows the CSRD reporting timeline for each company category.</p>
+          <p>About 40 weighted questions across all ten ESRS topics, scored 0–100 by section, with priority gaps, actions and each company category's CSRD timeline.</p>
           <div class="stack"><span>ESRS</span><span>JavaScript</span></div>
         </article>
         <article class="card" data-project="co2-calculator">
           <div class="kicker">Buildings · 2026</div>
           <h3>CO<sub>2</sub> benchmark calculator</h3>
-          <p>Operational carbon for commercial buildings from type, floor area, energy source, age and occupancy. It returns tonnes of CO<sub>2</sub>e, kg CO<sub>2</sub>e/m² and energy use intensity by scope, rated against EU Taxonomy, EPBD and BREEAM thresholds.</p>
+          <p>Operational carbon for commercial buildings: tCO<sub>2</sub>e, kg CO<sub>2</sub>e/m² and energy intensity by scope, rated against EU Taxonomy, EPBD and BREEAM.</p>
           <div class="stack"><span>GHG Protocol</span><span>EU Taxonomy</span><span>React</span></div>
         </article>
         <article class="card" data-project="monitoring">
           <div class="kicker">Energy monitoring <span class="status">In progress</span></div>
           <h3>Energy performance monitoring pipeline</h3>
-          <p>A Python pipeline that takes hourly meter data and builds a weather-normalised baseline by degree-day regression. It flags deviations from expected consumption and reports them in Power BI, in the form of ISO 50001 energy performance monitoring.</p>
+          <p>Hourly meter data to a weather-normalised degree-day baseline, with deviations flagged in Power BI: ISO 50001-style monitoring.</p>
           <div class="stack"><span>Python · pandas</span><span>Regression</span><span>Power BI</span></div>
         </article>
         <article class="card field-card" data-project="field-work">
           <div class="kicker">Field work · India</div>
           <h3>On-site audits and assessments</h3>
           <ul class="k-list">
-            <li><b>8 railway stations, Bihar:</b> a 25-day energy, water and load-survey campaign, with a report and prioritised interventions for each site</li>
-            <li><b>Biogas plant, Palakkad:</b> performance against design, root-cause analysis and feedstock lab tests</li>
-            <li><b>Solar and waste-to-resource:</b> PVsyst sizing and costing; a solar-powered trash compactor (B.Tech thesis, published 2020)</li>
+            <li><b>8 railway stations, Bihar:</b> 25-day energy, water and load survey; prioritised interventions for each site</li>
+            <li><b>Biogas plant, Palakkad:</b> performance vs design, root-cause analysis, feedstock lab tests</li>
+            <li><b>Solar:</b> PVsyst sizing and costing; solar-powered trash compactor (B.Tech thesis, published 2020)</li>
           </ul>
         </article>
       </div>
@@ -964,19 +1004,19 @@
       <div class="sec-head">
         <p class="eyebrow">Knowledge</p>
         <h2>What I know, and where it shows</h2>
-        <p>The technical ground I've covered moving from ESG reporting into industrial energy work, with the projects where each part is put to use.</p>
+        <p>What I've covered moving from ESG reporting into industrial energy, and where I've used it.</p>
       </div>
-      <div class="k-grid">
+      <div class="k-grid swipe" aria-label="Knowledge areas">
         <article class="k-card">
           <p class="k-num">01</p>
           <h3>Industrial energy systems</h3>
           <ul class="k-list">
-            <li><b>ISO 50001:</b> energy review, significant energy uses, baselines and EnPIs, Plan-Do-Check-Act</li>
+            <li><b>ISO 50001:</b> energy review, significant energy uses, baselines, EnPIs, PDCA</li>
             <li>Steam, compressed air, refrigeration, HVAC, motors and drives</li>
             <li>Process heat, combustion and waste-heat recovery</li>
-            <li><b>Heat electrification:</b> industrial heat pumps up to ~150 °C, electric boilers, resistance heating</li>
-            <li>Energy balances and P&amp;IDs; three-phase power, power factor, load profiles, demand charges</li>
-            <li><b>ISO 14064-1 and -2:</b> organisational inventories and project-level reductions</li>
+            <li><b>Heat electrification:</b> heat pumps to ~150 °C, electric boilers, resistance heating</li>
+            <li>Energy balances, P&amp;IDs, three-phase power, power factor, load profiles, demand charges</li>
+            <li><b>ISO 14064-1/-2:</b> organisational inventories, project-level reductions</li>
           </ul>
           <p class="k-shown"><span class="k-label">Applied in</span><a href="#work">Arvedi case study</a><span class="sep">·</span><a href="#more-work">Railway station audits</a></p>
         </article>
@@ -984,7 +1024,7 @@
           <p class="k-num">02</p>
           <h3>Decarbonization methods</h3>
           <ul class="k-list">
-            <li><b>Marginal abatement cost curves:</b> tCO<sub>2</sub>e per measure, €/t, ranking</li>
+            <li><b>Marginal abatement cost curves:</b> tCO<sub>2</sub>e and €/t per measure</li>
             <li><b>Project finance:</b> payback, NPV, IRR, LCOE, levelised cost of abatement</li>
             <li><b>SBTi Net-Zero Standard:</b> absolute contraction, SDA and FLAG targets</li>
             <li><b>CBAM:</b> covered sectors, embedded emissions, reporting duties</li>
@@ -997,9 +1037,9 @@
           <p class="k-num">03</p>
           <h3>Sector depth: EAF steel</h3>
           <ul class="k-list">
-            <li>Scrap–EAF process flow and where Scope 1 comes from: injected carbon, electrodes, gas, flux</li>
+            <li>Scrap–EAF process and its Scope 1 sources: injected carbon, electrodes, gas, flux</li>
             <li><b>Levers by maturity:</b> waste-heat recovery, electrification, biocarbon, hydrogen DRI, CCU</li>
-            <li>Scrap quality and copper tolerance as the long-term constraint</li>
+            <li>Scrap quality and copper as the long-term constraint</li>
             <li>ETS allocation, CBAM benchmarks and the 2026–2034 phase-out</li>
             <li>2030 and 2050 pathways against MPP and E3G/PNNL sector benchmarks</li>
           </ul>
@@ -1009,11 +1049,11 @@
           <p class="k-num">04</p>
           <h3>Energy data and tools</h3>
           <ul class="k-list">
-            <li><b>Excel:</b> models with Power Query, pivots, scenarios and sensitivity analysis</li>
-            <li><b>Python (pandas):</b> hourly meter data, cleaning, degree-day regression baselines, anomaly flags</li>
+            <li><b>Excel:</b> Power Query, pivots, scenario and sensitivity models</li>
+            <li><b>Python (pandas):</b> hourly meter data, degree-day baselines, anomaly flags</li>
             <li><b>Power BI:</b> energy performance dashboards</li>
             <li><b>PVsyst:</b> PV sizing and cost estimation</li>
-            <li><b>React and JavaScript:</b> interactive carbon, benchmarking and finance tools</li>
+            <li><b>React/JavaScript:</b> interactive carbon and finance tools</li>
           </ul>
           <p class="k-shown"><span class="k-label">Applied in</span><a href="https://jacob-hub-esg.github.io/macc-finance-tool/" target="_blank" rel="noopener">MACC &amp; finance tool</a><span class="sep">·</span><a href="https://jacob-hub-esg.github.io/esgbenchmark/" target="_blank" rel="noopener">Building emissions tool</a><span class="sep">·</span><a href="#more-work">Monitoring pipeline</a></p>
         </article>
@@ -1027,9 +1067,9 @@
       <div class="sec-head">
         <p class="eyebrow">ESG &amp; carbon accounting</p>
         <h2>Inventories, disclosure and assurance</h2>
-        <p>The other half of the job: the numbers every decarbonization plan starts from, and the reports and audits they end up in.</p>
+        <p>The numbers every decarbonization plan starts from, and the reports and audits they end up in.</p>
       </div>
-      <div class="k-grid six">
+      <div class="k-grid six swipe" aria-label="ESG and carbon accounting areas">
         <article class="k-card">
           <h3>GHG inventories</h3>
           <ul class="k-list">
@@ -1037,7 +1077,7 @@
             <li>Boundary setting and emission-factor selection</li>
             <li>Project-level reductions under ISO 14064-2</li>
           </ul>
-          <p class="k-shown"><span class="k-label">Evidence</span>2024 Scope 1–2 inventory at Industrious Global Technologies<span class="sep">·</span>Scope 1–3 for Omtra clients, with data collected on site</p>
+          <p class="k-shown"><span class="k-label">Evidence</span>2024 inventory, Industrious Global<span class="sep">·</span>Busatti footprint from on-site data<span class="sep">·</span>Scope 1–3 for Omtra clients</p>
         </article>
         <article class="k-card">
           <h3>Reporting &amp; disclosure</h3>
@@ -1046,7 +1086,7 @@
             <li>GRI, SASB, TCFD, IR, BRSR</li>
             <li>CDP-style questionnaires, EU Taxonomy</li>
           </ul>
-          <p class="k-shown"><span class="k-label">Evidence</span><a href="https://jacob-hub-esg.github.io/csrd-framework/" target="_blank" rel="noopener">CSRD readiness assessment across all ten ESRS</a><span class="sep">·</span>Disclosure benchmarking at Earth Academy Global<span class="sep">·</span><a href="#skills">GRI, TCFD, IR and SDGs practitioner badges</a></p>
+          <p class="k-shown"><span class="k-label">Evidence</span><a href="https://jacob-hub-esg.github.io/csrd-framework/" target="_blank" rel="noopener">CSRD readiness tool</a><span class="sep">·</span>Busatti's first Impact Report<span class="sep">·</span>Five-framework benchmarking, Earth Academy<span class="sep">·</span><a href="#skills">Practitioner badges</a></p>
         </article>
         <article class="k-card">
           <h3>Assurance &amp; data quality</h3>
@@ -1055,7 +1095,7 @@
             <li>Traceability and evidence records for auditors</li>
             <li>B Corp and EcoVadis certification processes</li>
           </ul>
-          <p class="k-shown"><span class="k-label">Evidence</span>Internal audits and third-party verification at Omtra<span class="sep">·</span>Formal data-quality controls at Industrious Global Technologies</p>
+          <p class="k-shown"><span class="k-label">Evidence</span>Busatti B Impact Assessment support (89.9 points)<span class="sep">·</span>B Corp and EcoVadis verification, Omtra<span class="sep">·</span>Data-quality controls, Industrious Global</p>
         </article>
         <article class="k-card">
           <h3>Targets &amp; climate claims</h3>
@@ -1069,11 +1109,11 @@
         <article class="k-card">
           <h3>Life cycle assessment</h3>
           <ul class="k-list">
-            <li>Practical LCA training in the M.Sc.</li>
-            <li>Green procurement and waste management coursework</li>
-            <li>Agricultural-university background, relevant to agrifood LCA</li>
+            <li>Cradle-to-grave product LCA</li>
+            <li>LCA training, green procurement and waste management (M.Sc.)</li>
+            <li>Agricultural-university background, useful for agrifood LCA</li>
           </ul>
-          <p class="k-shown"><span class="k-label">Evidence</span><a href="#experience">M.Sc., University of Milan</a><span class="sep">·</span><a href="#experience">B.Tech, TNAU</a></p>
+          <p class="k-shown"><span class="k-label">Evidence</span><a href="#experience">Cartier product LCA, Omtra</a><span class="sep">·</span><a href="#experience">M.Sc., University of Milan</a><span class="sep">·</span><a href="#experience">B.Tech, TNAU</a></p>
         </article>
         <article class="k-card">
           <h3>Supply chains &amp; buildings</h3>
@@ -1082,7 +1122,7 @@
             <li>Scope 1–2 tools for building portfolios</li>
             <li>Benchmarking against EU Taxonomy, EPBD and BREEAM</li>
           </ul>
-          <p class="k-shown"><span class="k-label">Evidence</span>Supplier screening at Industrious Global Technologies<span class="sep">·</span><a href="https://jacob-hub-esg.github.io/esgbenchmark/" target="_blank" rel="noopener">Building emissions tool</a><span class="sep">·</span><a href="https://jacob-hub-esg.github.io/my-calculator/" target="_blank" rel="noopener">CO<sub>2</sub> benchmark calculator</a></p>
+          <p class="k-shown"><span class="k-label">Evidence</span>Supplier screening, Industrious Global<span class="sep">·</span><a href="https://jacob-hub-esg.github.io/esgbenchmark/" target="_blank" rel="noopener">Building emissions tool</a><span class="sep">·</span><a href="https://jacob-hub-esg.github.io/my-calculator/" target="_blank" rel="noopener">CO<sub>2</sub> benchmark calculator</a></p>
         </article>
       </div>
     </div>
@@ -1096,26 +1136,52 @@
           <div class="sec-head">
             <p class="eyebrow">Experience</p>
             <h2>Measurement first, now reduction</h2>
-            <p>About two years quantifying emissions for industrial and corporate clients, including collecting primary data on site. I now apply that to the reduction side.</p>
+            <p>Emissions work for industrial, luxury-goods and corporate clients, often on site.</p>
           </div>
-          <ol class="timeline">
+          <ol class="timeline xp">
             <li>
-              <div class="when">Feb 2025 – Aug 2025</div>
-              <h3>ESG Supply Chain &amp; International Project Sourcing Intern</h3>
-              <div class="org">Industrious Global Technologies · Milan</div>
-              <p>Calculated the company's 2024 Scope 1 and 2 inventory from primary consumption data, ran data-quality controls, screened international suppliers against ESG criteria, and assessed reduction pathways and efficiency opportunities.</p>
+              <details class="xp-item" name="xp" open>
+                <summary>
+                  <h3>ESG Supply Chain &amp; International Project Sourcing Intern</h3>
+                  <span class="xp-meta"><span class="org">Industrious Global Technologies · Milan</span><span class="when">Feb – Aug 2025</span></span>
+                  <span class="xp-sum">Company carbon inventory, supplier ESG screening and management KPIs.</span>
+                </summary>
+                <ul class="xp-list">
+                  <li>Built the 2024 Scope 1–2 inventory from primary consumption data (GHG Protocol): boundary, emission factors and formal quality controls on department and supplier data.</li>
+                  <li>Screened international suppliers against ESG criteria before approval.</li>
+                  <li>Assessed reduction pathways, flagged efficiency opportunities and built the KPI tracking and reporting management used.</li>
+                </ul>
+              </details>
             </li>
             <li>
-              <div class="when">Nov 2023 – May 2024</div>
-              <h3>ESG Measurement Intern</h3>
-              <div class="org">Omtra S.r.l. Società Benefit · Milan</div>
-              <p>Collected primary energy and process data on site and calculated Scope 1–3 emissions for client companies. Took part in internal audits and third-party verification for B Corp and EcoVadis, and presented findings to clients.</p>
+              <details class="xp-item" name="xp">
+                <summary>
+                  <h3>ESG Measurement Intern</h3>
+                  <span class="xp-meta"><span class="org">Omtra S.r.l. Società Benefit · Milan</span><span class="when">Nov 2023 – May 2024</span></span>
+                  <span class="xp-sum">B Corp consultancy: product LCA for Cartier; footprint and B Corp support for Busatti.</span>
+                </summary>
+                <ul class="xp-list">
+                  <li><b>Cartier:</b> cradle-to-grave product life cycle assessment.</li>
+                  <li><b>Busatti</b>, Tuscan textile maker since 1842: on-site energy and operational data at both production sites, and its carbon footprint.</li>
+                  <li>Supported Busatti's B Impact Assessment (89.9 points; 80 to certify, industry average 75.5) and its first statutory Impact Report as a Società Benefit: gas −13%, electricity −4%, solar self-generation +19%.</li>
+                  <li>Across clients: Scope 1–3 calculations, B Corp and EcoVadis verification support against source evidence, findings presented to clients.</li>
+                </ul>
+              </details>
             </li>
             <li>
-              <div class="when">Sep 2021 – Nov 2022</div>
-              <h3>ESG Analyst (remote)</h3>
-              <div class="org">Earth Academy Global · Amstelveen, Netherlands</div>
-              <p>Analysed corporate disclosures against GRI, SASB, TCFD and BRSR, and developed and delivered training on environmental and renewable energy technologies.</p>
+              <details class="xp-item" name="xp">
+                <summary>
+                  <h3>ESG Analyst &amp; E-learning Course Designer</h3>
+                  <span class="xp-meta"><span class="org">Earth Academy Global · Amstelveen (remote)</span><span class="when">May 2021 – Nov 2022</span></span>
+                  <span class="xp-sum">Disclosure benchmarking, BRSR course design and client ESG trainings.</span>
+                </summary>
+                <ul class="xp-list">
+                  <li>Joined as a B.Tech intern: turned India's new BRSR framework into a 100-slide, expert-reviewed deck, then taught myself Articulate Storyline and built an interactive BRSR course in 16 days.</li>
+                  <li>Prepared training materials for programmes delivered with <b>ISOS Group</b>: GRI training in Dubai, ESG masterclass for <b>Al-Dabbagh Group</b> (Saudi Arabia).</li>
+                  <li>Stayed on as ESG Analyst: benchmarked disclosures against GRI, SASB, TCFD, IR and BRSR for international clients.</li>
+                  <li>Supported training for <b>Tanmiah Food Company</b>'s sustainability team; developed training content on environmental solutions and renewable energy technologies.</li>
+                </ul>
+              </details>
             </li>
           </ol>
         </div>
@@ -1127,8 +1193,8 @@
           <div class="edu-item">
             <div class="when">2022 – 2025 · Classe LM-75</div>
             <h3>M.Sc. Environmental Change and Global Sustainability</h3>
-            <p>Università degli Studi di Milano. Full scholarship, 100/110, taught in English. Thesis: <em>Emission Reduction Commitments in Global Agriculture</em>.</p>
-            <p class="coursework"><span class="edu-label">Key coursework</span> Sustainability accounting &amp; management · Environmental economics &amp; policy · Statistical &amp; quantitative methods · Bioresource &amp; pollution control technology (29/30) · Chemistry of natural processes (28/30) · Waste management · LCA &amp; GIS training</p>
+            <p>Università degli Studi di Milano · full scholarship · 100/110 · taught in English. Thesis: <em>Emission Reduction Commitments in Global Agriculture</em>.</p>
+            <p class="coursework"><span class="edu-label">Key coursework</span> Sustainability accounting · Environmental economics &amp; policy · Quantitative methods · Pollution control technology (29/30) · Chemistry of natural processes (28/30) · Waste management · LCA &amp; GIS</p>
           </div>
           <div class="edu-item">
             <div class="when">2016 – 2021</div>
@@ -1162,7 +1228,7 @@
             <h2>Credentials</h2>
           </div>
           <ul class="certs">
-            <li>GHG 202: Basics of Project-Level GHG Accounting <span>GHGMI · 2026</span></li>
+            <li>GHG 202: Basics of Project-Level GHG Accounting <span>GHGMI · in progress</span></li>
             <li>GHG Accounting: Corporate Standard <span>GHG Protocol · 2026</span></li>
             <li>ISO 50001 Energy Management Systems <span>Coursera · 2026</span></li>
             <li>Energy Audits · Energy Efficiency Fundamentals <span>Schneider Electric · 2026</span></li>
@@ -1191,7 +1257,7 @@
       <div class="contact-body">
         <p class="eyebrow">Contact</p>
         <h2>Let's talk about your site's energy</h2>
-        <p class="lead">I'm based in Milan and open to energy engineering, decarbonization, ESCo, ESG, carbon accounting and LCA roles in Italy and abroad. I'm happy to walk through any of the models on this site.</p>
+        <p class="lead">Based in Milan, open to energy engineering, decarbonization, ESCo, ESG, carbon accounting and LCA roles in Italy and abroad. Happy to walk you through any model on this site.</p>
         <div class="cta">
           <a class="btn btn-primary" href="mailto:joathamjacob@gmail.com">joathamjacob@gmail.com</a>
           <a class="btn btn-ghost" href="https://www.linkedin.com/in/joatham-jacob" target="_blank" rel="noopener">LinkedIn</a>
@@ -1279,6 +1345,40 @@
     });
     list.addEventListener('click', function (e) { if (e.target.tagName === 'A') close(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && list.classList.contains('open')) { close(); btn.focus(); } });
+  })();
+
+  // Experience: opening one role closes the others (native in newer browsers via name="xp").
+  (function () {
+    var items = document.querySelectorAll('details.xp-item');
+    items.forEach(function (d) {
+      d.addEventListener('toggle', function () {
+        if (d.open) items.forEach(function (o) { if (o !== d && o.open) o.open = false; });
+      });
+    });
+  })();
+
+  // Phones: position dots under each sideways-swipe row of cards.
+  (function () {
+    document.querySelectorAll('.swipe').forEach(function (row) {
+      var cards = Array.prototype.slice.call(row.children);
+      var dots = document.createElement('div');
+      dots.className = 'swipe-dots';
+      cards.forEach(function (c, i) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.setAttribute('aria-label', 'Show card ' + (i + 1) + ' of ' + cards.length);
+        b.addEventListener('click', function () { row.scrollTo({ left: c.offsetLeft - row.offsetLeft - parseFloat(getComputedStyle(row).paddingLeft), behavior: 'smooth' }); });
+        dots.appendChild(b);
+      });
+      row.insertAdjacentElement('afterend', dots);
+      var buttons = dots.querySelectorAll('button');
+      function mark() {
+        var x = row.scrollLeft, best = 0, bestD = Infinity;
+        cards.forEach(function (c, i) { var d = Math.abs(c.offsetLeft - row.offsetLeft - parseFloat(getComputedStyle(row).paddingLeft) - x); if (d < bestD) { bestD = d; best = i; } });
+        buttons.forEach(function (b, i) { b.setAttribute('aria-current', i === best ? 'true' : 'false'); });
+      }
+      row.addEventListener('scroll', function () { window.requestAnimationFrame(mark); }, { passive: true });
+      mark();
+    });
   })();
 
   // Hide any link still pointing at a placeholder, so nothing broken shows on the live site.
@@ -1462,7 +1562,7 @@
     // Scroll-in reveals: each screen's content rises in, staggered in reading order.
     var targets = document.querySelectorAll([
       '.slide:not(.hero) .sec-head > *', '.cs-left > *', '.chart-card', '.findings li', '.cs-foot',
-      '.card', '.field-head', '.field > div', '.k-card', '.timeline li', '.two-col > div > .eyebrow',
+      '.card', '.field-head', '.field > div', '.k-card', '.timeline > li', '.two-col > div > .eyebrow',
       '.grad-photo', '.edu-item', '.skills > div', '.certs li', '.badges-wrap > .eyebrow', '.badges li', '.contact-body > *', '.contact-foot'
     ].join(','));
     targets.forEach(function (el) { el.setAttribute('data-reveal', ''); });

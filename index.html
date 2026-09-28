@@ -24,6 +24,7 @@
 <meta property="og:description" content="GHG inventories, CSRD reporting, industrial energy efficiency and marginal abatement cost modelling. Based in Milan.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="hero.jpg">
+<link rel="preload" href="UnifrakturMaguntia-Regular.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23053b2d'/%3E%3Ctext x='16' y='21.5' font-family='Arial,sans-serif' font-size='14' font-weight='700' fill='%2334d399' text-anchor='middle'%3EJJ%3C/text%3E%3C/svg%3E">
 <style>
   /* =========================================================
@@ -76,17 +77,19 @@
   /* =========================================================
      Typography — self-hosted webfonts (SIL Open Font License)
      ========================================================= */
-  @font-face { font-family: "IBM Plex Sans"; src: url("plex-sans-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
-  @font-face { font-family: "IBM Plex Sans"; src: url("plex-sans-400-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
-  @font-face { font-family: "IBM Plex Sans"; src: url("plex-sans-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
-  @font-face { font-family: "IBM Plex Sans"; src: url("plex-sans-600.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
-  @font-face { font-family: "IBM Plex Sans"; src: url("plex-sans-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+  /* Body text: Quicksand (variable 300-700), SIL Open Font License. Same Latin subsets Google Fonts serves. */
+  @font-face { font-family: "Quicksand"; src: url("quicksand-latin-ext.woff2") format("woff2"); font-weight: 300 700; font-style: normal; font-display: swap;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: "Quicksand"; src: url("quicksand-latin.woff2") format("woff2"); font-weight: 300 700; font-style: normal; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face { font-family: "IBM Plex Mono"; src: url("plex-mono-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
   @font-face { font-family: "IBM Plex Mono"; src: url("plex-mono-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
   @font-face { font-family: "Fraunces"; src: url("fraunces.woff2") format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
   @font-face { font-family: "Fraunces"; src: url("fraunces-italic.woff2") format("woff2"); font-weight: 100 900; font-style: italic; font-display: swap; }
+  /* Landing-page name only. UnifrakturMaguntia, SIL Open Font License (licence text is embedded in the font file). */
+  @font-face { font-family: "UnifrakturMaguntia"; src: url("UnifrakturMaguntia-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
   :root {
-    --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-body: "Quicksand", system-ui, -apple-system, "Segoe UI", sans-serif;
     --font-head: "Fraunces", Georgia, "Times New Roman", serif;
     --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
     --head-weight: 600;
@@ -102,7 +105,7 @@
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; overflow-x: clip; }
   body {
     margin: 0; background: var(--bg); color: var(--ink);
-    font: 1rem/1.6 var(--font-body);
+    font: 500 1rem/1.6 var(--font-body);   /* Quicksand reads thin at 400, so body text uses 500 */
     -webkit-font-smoothing: antialiased;
   }
   a { color: var(--accent-ink); text-underline-offset: 3px; }
@@ -182,6 +185,7 @@
   .hero .frame { padding-top: .25rem; padding-bottom: 3.25rem; }
   .hero .eyebrow { color: var(--pop); }
   .hero h1 { font-size: clamp(2.4rem, 8.4vw, 3.5rem); line-height: 1.02; margin: 0 0 .6rem; }
+  .hero h1 { font-family: "UnifrakturMaguntia", var(--font-head); font-weight: 400; letter-spacing: 0; font-synthesis: none; font-size: clamp(2.6rem, 9.4vw, 3.9rem); line-height: 1.08; }
   .hero .tagline { font-size: clamp(1.3rem, 4.6vw, 1.7rem); line-height: 1.2; margin: 0 0 .9rem; font-style: italic; font-weight: 400; }
   .hero .lede { font-size: 1.03rem; line-height: 1.6; color: var(--hero-ink-2); margin: 0 0 1.5rem; max-width: 60ch; }
 
@@ -327,10 +331,8 @@
     .skills { grid-template-columns: 1fr 1fr; }
     .findings { grid-template-columns: 1fr 1fr; }
   }
-  /* ---------- phones ---------- */
-  @media (max-width: 640px) {
-    .frame, .nav-in { padding-left: 1rem; padding-right: 1rem; }
-    .frame { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+  /* ---------- phones and narrow tablets: the section links fold into a Menu button ---------- */
+  @media (max-width: 719px) {
     .menu-btn { display: inline-flex; margin-left: auto; }
     .nav-in { gap: 0; }
     .nav ul {
@@ -340,6 +342,11 @@
     .nav ul.open { display: flex; }
     .nav ul a { display: block; padding: .7rem 0; font-size: 1rem; color: var(--hero-ink); text-shadow: none; border-bottom: 1px solid rgba(255,255,255,.08); }
     .nav ul li:last-child a { border-bottom: 0; }
+  }
+  /* ---------- phones ---------- */
+  @media (max-width: 640px) {
+    .frame, .nav-in { padding-left: 1rem; padding-right: 1rem; }
+    .frame { padding-top: 3.5rem; padding-bottom: 3.5rem; }
     .hero-bg { aspect-ratio: 4 / 5; }
     .hero-img { background-position: 40% center; }
     .hero .frame { padding-top: 0; }
@@ -380,7 +387,7 @@
     .hero .frame { position: relative; z-index: 1; flex-direction: row; align-items: flex-end; justify-content: flex-end; padding-bottom: 3.6rem; }
     .hero-text { width: 30.5rem; }
     .hero .eyebrow { font-size: .72rem; margin-bottom: .8rem; }
-    .hero h1 { font-size: 3.6rem; margin-bottom: .5rem; text-shadow: 0 2px 24px rgba(0,0,0,.25); }
+    .hero h1 { font-size: 3.95rem; margin-bottom: .5rem; text-shadow: 0 2px 24px rgba(0,0,0,.25); }
     .hero .tagline { font-size: 1.5rem; margin-bottom: .8rem; }
     .hero .lede { font-size: .93rem; margin-bottom: 1.4rem; color: #d3e3dc; }
     .hero .btn { font-size: .85rem; padding: .62rem 1.05rem; }
@@ -398,7 +405,7 @@
     .stat { padding: .8rem .95rem; }
     .stat .v { font-size: 1.45rem; }
     .stat .l { font-size: .7rem; }
-    .panel-sub { margin-bottom: .3rem; font-size: .72rem; }
+    .panel-sub { margin-bottom: .3rem; font-size: .68rem; }
     .panel-title { font-size: .8rem; }
     .legend { font-size: .72rem; margin-top: .2rem; }
     .measures { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
@@ -417,8 +424,9 @@
     /* experience */
     .two-col { grid-template-columns: 1.3fr 1fr; gap: 3.2rem; }
     .timeline p { font-size: .82rem; }
-    .timeline li { padding-bottom: 1.25rem; }
-    .grad-photo { margin-bottom: .9rem; aspect-ratio: 5 / 2; background-position: 47% 30%; }
+    #experience .sec-head p:not(.eyebrow) { font-size: .92rem; max-width: none; }
+    .timeline li { padding-bottom: 1rem; }
+    .grad-photo { margin-bottom: .8rem; aspect-ratio: 3 / 1; background-position: 47% 30%; }
     .edu-item { margin-bottom: .9rem; }
     .edu-item h3 { font-size: .98rem; }
     .edu-item .coursework { padding: .45rem .7rem; margin-top: .35rem; }
@@ -439,12 +447,12 @@
 
     /* knowledge: four areas side by side */
     #knowledge .sec-head { margin-bottom: 1.2rem; }
-    #knowledge .sec-head p:not(.eyebrow) { font-size: .92rem; }
+    #knowledge .sec-head p:not(.eyebrow) { font-size: .92rem; max-width: none; }
     .k-grid { grid-template-columns: repeat(4, 1fr); gap: 1.2rem; flex: 1; min-height: 0; }
     .k-card { padding: 1rem 1.05rem .85rem; }
     .k-card h3 { font-size: 1.12rem; margin-bottom: .6rem; }
-    .k-list { gap: .38rem; margin-bottom: .8rem; }
-    .k-list li { font-size: .76rem; line-height: 1.42; padding-left: .85rem; }
+    .k-list { gap: .34rem; margin-bottom: .8rem; }
+    .k-list li { font-size: .74rem; line-height: 1.42; padding-left: .85rem; }
     .k-shown { font-size: .74rem; padding-top: .6rem; }
 
     /* ESG: six compact cards, three per row */

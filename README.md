@@ -6,7 +6,7 @@
 
 Portfolio website of an energy and environmental engineer in Milan,<br>working from the emissions inventory to the measures that cut it.
 
-**[Visit the site →](https://joathamjacob.com/)** &nbsp;·&nbsp; [Download CV](https://joathamjacob.com/CV.pdf) &nbsp;·&nbsp; [LinkedIn](https://www.linkedin.com/in/joatham-jacob) &nbsp;·&nbsp; [Email](mailto:joathamjacob@gmail.com)
+**[Visit the site →](https://joathamjacob.com/)** &nbsp;·&nbsp; [Download CV](https://joathamjacob.com/CV.pdf) &nbsp;·&nbsp; [LinkedIn](https://www.linkedin.com/in/joatham-jacob) &nbsp;·&nbsp; [Email](mailto:jj@joathamjacob.com)
 
 </div>
 
@@ -95,4 +95,4 @@ On phones it becomes one scrolling page with a menu, and the card sections swipe
 
 ## Contact
 
-[joathamjacob@gmail.com](mailto:joathamjacob@gmail.com) · [linkedin.com/in/joatham-jacob](https://www.linkedin.com/in/joatham-jacob) · Milan, Italy
+[jj@joathamjacob.com](mailto:jj@joathamjacob.com) · [linkedin.com/in/joatham-jacob](https://www.linkedin.com/in/joatham-jacob) · Milan, Italy

@@ -65,6 +65,7 @@ On phones it becomes one scrolling page with a menu, and the card sections swipe
 - **One static page.** `index.html` holds the content, styles and scripts in plain HTML, CSS and JavaScript: no framework, no build step, no cookies or tracking, and no requests to outside services. Fonts and images are served from this repository.
 - **Laptops and desktops:** each section is a 16:9 page. You move between pages with the page names along the top or the arrow keys, and each page has its own address (for example `#work`), so direct links and the back button work.
 - **Phones and tablets:** one scrolling page with a menu bar.
+- **Background:** the landing and Contact pages show a carpet plot, a year of 15-minute electricity readings for a dairy, drawn on a canvas from data stored in `index.html`. Each column is a day and each row a time of day. On a laptop, hovering shows the kW, day and time. The data is synthetic for now; the monitoring pipeline will replace it.
 - **Accessibility:** light and dark themes, keyboard navigation, and no animation for visitors who have "reduce motion" turned on.
 - **Hosting:** GitHub Pages, which publishes the site automatically when the repository changes.
 

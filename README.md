@@ -6,7 +6,7 @@
 
 Portfolio website of an energy and environmental engineer in Milan,<br>working from the emissions inventory to the measures that cut it.
 
-**[Visit the site →](https://joathamjacob.com/)** &nbsp;·&nbsp; [Download CV](https://joathamjacob.com/CV.pdf) &nbsp;·&nbsp; [LinkedIn](https://www.linkedin.com/in/joatham-jacob) &nbsp;·&nbsp; [Email](mailto:jj@joathamjacob.com)
+**[Visit the site →](https://joathamjacob.com/)** &nbsp;·&nbsp; [Download CV](https://joathamjacob.com/CV.pdf) &nbsp;·&nbsp; [LinkedIn](https://www.linkedin.com/in/joatham-jacob) &nbsp;·&nbsp; [Email](mailto:joathamjacob@gmail.com)
 
 </div>
 
@@ -63,7 +63,7 @@ On phones it becomes one scrolling page with a menu, and the card sections swipe
 ## How it's built
 
 - **One static page.** `index.html` holds the content, styles and scripts in plain HTML, CSS and JavaScript: no framework, no build step, no cookies or tracking, and no requests to outside services. Fonts and images are served from this repository.
-- **Laptops and desktops:** each section is a 16:9 page. You move between pages with the floating dock or the arrow keys, and each page has its own address (for example `#work`), so direct links and the back button work.
+- **Laptops and desktops:** each section is a 16:9 page. You move between pages with the page names along the top or the arrow keys, and each page has its own address (for example `#work`), so direct links and the back button work.
 - **Phones and tablets:** one scrolling page with a menu bar.
 - **Accessibility:** light and dark themes, keyboard navigation, and no animation for visitors who have "reduce motion" turned on.
 - **Hosting:** GitHub Pages, which publishes the site automatically when the repository changes.
@@ -77,6 +77,7 @@ On phones it becomes one scrolling page with a menu, and the card sections swipe
 | `arvedi-case-study.pdf` | The full Arvedi case study |
 | `hero.jpg`, `graduation.jpg` | Photos |
 | `badge-*.webp` | Earth Academy practitioner badges |
+| `favicon.svg`, `favicon.ico`, `apple-touch-icon.png` | The site icon in browser tabs, bookmarks and phone home screens |
 | `*.woff2` | Self-hosted fonts |
 | `LICENSE-*-OFL.txt` | Font licences |
 | `preview/` | The share image and screenshots used here and in link previews |
@@ -95,4 +96,4 @@ On phones it becomes one scrolling page with a menu, and the card sections swipe
 
 ## Contact
 
-[jj@joathamjacob.com](mailto:jj@joathamjacob.com) · [linkedin.com/in/joatham-jacob](https://www.linkedin.com/in/joatham-jacob) · Milan, Italy
+[joathamjacob@gmail.com](mailto:joathamjacob@gmail.com) · [linkedin.com/in/joatham-jacob](https://www.linkedin.com/in/joatham-jacob) · Milan, Italy

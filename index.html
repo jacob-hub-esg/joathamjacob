@@ -749,6 +749,20 @@
     html.router[data-page="knowledge"] #knowledge, html.router[data-page="esg"] #esg, html.router[data-page="experience"] #experience,
     html.router[data-page="skills"] #skills, html.router[data-page="contact"] #contact { display: flex; flex-direction: column; justify-content: center; }
     html.router .slide > .frame { height: 45rem; flex: none; }
+
+    /* experience: use the full page height instead of bunching at the top.
+       Roles and degrees get more room between them, and the graduation photo
+       grows into whatever height is left so both columns end at the bottom. */
+    html.router #experience .two-col { height: 100%; }
+    html.router #experience .two-col > div { display: flex; flex-direction: column; min-height: 0; }
+    html.router #experience .sec-head { margin-bottom: 2.4rem; }
+    html.router #experience .timeline > li { padding-bottom: 2.4rem; }
+    html.router #experience .timeline > li:last-child { padding-bottom: 0; }
+    html.router #experience .xp-list { gap: .4rem; margin-top: .55rem; }
+    html.router #experience .grad-photo { flex: 1 1 auto; aspect-ratio: auto; min-height: 9rem; margin-bottom: 1.6rem; background-position: 47% 28%; }
+    html.router #experience .edu-item { margin-bottom: 1.6rem; }
+    html.router #experience .edu-item:last-child { margin-bottom: 0; }
+    html.router #experience .edu-item .coursework { margin-top: .55rem; padding: .6rem .8rem; }
   }
 
   /* =========================================================
@@ -1363,7 +1377,6 @@
         <div class="cta">
           <a class="btn btn-primary" href="mailto:contact@joathamjacob.com">contact@joathamjacob.com</a>
           <a class="btn btn-ghost" href="https://www.linkedin.com/in/joatham-jacob" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="btn btn-ghost" href="CV.pdf" data-cv="energy" download="Joatham_Jacob_CV.pdf">Energy CV</a>
           <a class="btn btn-ghost" href="cv-esg.pdf" data-cv="esg" download>ESG CV</a>
         </div>
       </div>

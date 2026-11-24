@@ -39,7 +39,7 @@ Capex and opex are modelled estimates from public sources, not supplier quotes; 
 | [Building emissions benchmark & decarbonisation tool](https://jacob-hub-esg.github.io/esgbenchmark/) | Scope 1–2 for six building types in 20 European countries on IEA grid factors, benchmarked against EU peers, with CSRD checks and a 2050 net-zero pathway. |
 | [CSRD readiness assessment](https://jacob-hub-esg.github.io/csrd-framework/) | About 40 weighted questions across all ten ESRS topics, scored 0–100 by section, with priority gaps and actions. |
 | [CO₂ benchmark calculator](https://jacob-hub-esg.github.io/my-calculator/) | Operational carbon for commercial buildings by scope, rated against EU Taxonomy, EPBD and BREEAM. |
-| Energy performance monitoring pipeline *(in progress)* | Python and Power BI: hourly meter data, a weather-normalised degree-day baseline and flagged deviations, following ISO 50001 performance monitoring. |
+| [Energy monitoring pipeline & dashboard](cremona-dashboard.pdf) | ISO 50001-style monitoring of a simulated Cremona dairy in Python and Power BI: weather- and production-normalised baselines, CUSUM fault detection, PV and load-profile analysis. Found all 6 planted faults, 1 saving and 9 data errors. |
 
 ## What's on the site
 
@@ -65,7 +65,7 @@ On phones it becomes one scrolling page with a menu, and the card sections swipe
 - **One static page.** `index.html` holds the content, styles and scripts in plain HTML, CSS and JavaScript: no framework, no build step, no cookies or tracking, and no requests to outside services. Fonts and images are served from this repository.
 - **Laptops and desktops:** each section is a 16:9 page. You move between pages with the page names along the top or the arrow keys, and each page has its own address (for example `#work`), so direct links and the back button work.
 - **Phones and tablets:** one scrolling page with a menu bar.
-- **Background:** the landing and Contact pages show a carpet plot, a year of 15-minute electricity readings for a dairy, drawn on a canvas from data stored in `index.html`. Each column is a day and each row a time of day. On a laptop, hovering shows the kW, day and time. The data is synthetic for now; the monitoring pipeline will replace it.
+- **Background:** the landing and Contact pages show a carpet plot, a year of hourly electricity readings (2025) from the simulated Cremona dairy in my monitoring project, drawn on a canvas from data stored in `index.html`. Each column is a day and each row an hour. On a laptop, hovering shows the kW, day and time.
 - **Accessibility:** light and dark themes, keyboard navigation, and no animation for visitors who have "reduce motion" turned on.
 - **Hosting:** GitHub Pages, which publishes the site automatically when the repository changes.
 
@@ -76,6 +76,7 @@ On phones it becomes one scrolling page with a menu, and the card sections swipe
 | `index.html` | The whole site: content, styles and scripts |
 | `CV.pdf` | The CV behind the download buttons |
 | `arvedi-case-study.pdf` | The full Arvedi case study |
+| `cremona-dashboard.pdf` | The Power BI dashboard from the monitoring project |
 | `hero.jpg`, `graduation.jpg` | Photos |
 | `badge-*.webp` | Earth Academy practitioner badges |
 | `favicon.svg`, `favicon.ico`, `apple-touch-icon.png` | The site icon in browser tabs, bookmarks and phone home screens |
